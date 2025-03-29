@@ -1,23 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import Header from "./components/Header/Header";
+import Sidebar from "./components/Sidebar/Sidebar";
+import {useState} from 'react'
+import Main from "./ui/Main";
+import Content from "./ui/Content";
+import Profile from "./components/Profile/Profile";
+import Stats from "./components/Stats/Stats";
+import Team from "./components/Team/Team";
+import Event from "./components/Event/Event";
 
 function App() {
+  const [darkMode, setdarkMode] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const toggleDarkMode = ()=>{
+    setdarkMode(!darkMode);
+  }
+  const toggleSidebar = ()=>{
+    setIsSidebarOpen(!isSidebarOpen);
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className={`font-quickSand ${darkMode && 'dark'}`}>
+      <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} toggleSidebar={toggleSidebar} />
+      <Sidebar isSidebarOpen={isSidebarOpen} />
+
+      <Main isSidebarOpen={isSidebarOpen}>
+        <Content>
+          <Stats darkMode={darkMode}/>
+          <div className="flex flex-col gap-3 lg:flex-row">
+            <Team/>
+            <Event/>
+          </div>
+        </Content>
+        <Profile />
+      </Main>
+
     </div>
   );
 }
