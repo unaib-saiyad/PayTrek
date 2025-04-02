@@ -1,27 +1,19 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const app = express();
-const cors = require("cors");
+const connectToMongo = require('./db');
+const express = require('express');
+var cors = require('cors')
 require("dotenv").config();
-
-// middleware
+connectToMongo();
+const app = express()
 const corsOptions = {
     origin: process.env.FRONTEND_URL // frontend URI (ReactJS)
 }
+const port = process.env.PORT || 4000;
+
 app.use(express.json());
-app.use(cors(corsOptions));
+app.use(cors(corsOptions)); 
 
-// connect MongoDB
-mongoose.connect(process.env.MONGODB_URI).then(() => {
-    const PORT = process.env.PORT || 4000
-    app.listen(PORT, () => {
-        console.log(`App is Listening on PORT ${PORT}`);
-    })
-}).catch(err => {
-    console.log(err);
-});
+app.use('/api', require('./routes.js'));
 
-// route
-app.get("/", (req, res) => {
-    res.status(201).json({message: "Connected to Backend!"});
-});
+app.listen(port, () => {
+  console.log(`PayTrek app listening on port ${port}`)
+}) 
