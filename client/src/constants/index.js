@@ -6,7 +6,6 @@ import {
   IoIosPerson,
   IoIosPersonAdd,
   IoIosEyeOff,
-  IoIosLogIn,
   IoIosLogOut,
 } from "react-icons/io";
 import {
@@ -58,14 +57,9 @@ export const links = [
     text: "Products", 
   },
   {
-    href: "#",
-    icon: IoIosLogIn,
-    text: "Sign In",
-  },
-  {
-    href: "#",
+    href: "/",
     icon: IoIosLogOut,
-    text: "Sign Up",
+    text: "Logout",
   },
 ];
 
