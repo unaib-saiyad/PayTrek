@@ -25,13 +25,16 @@ cd paytrek
 npm install
 
 3. Create .env inside backend
-add urls for MONGODB_URI, PORT, FRONTEND_URL
+add urls for MONGODB_URI, PORT, FRONTEND_URL, JWT_SECRET
 
-4. Start the backend:
+4. Create .env inside client
+add urls for REACT_APP_BACKEND_URL, REACT_APP_UPLOAD_IMAGE_CLOUD_URL
+
+5. Start the backend:
 cd backend
-npm start
+node index.js
 
-5. Start the frontend:
+6. Start the frontend:
 cd client
 npm start
 
