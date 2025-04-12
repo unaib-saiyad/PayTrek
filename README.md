@@ -21,7 +21,10 @@ PayTrek is a MERN stack-based finance tracker that helps users manage their expe
    git clone https://github.com/unaib-saiyad/PayTrek.git
 
 2. Install dependencies:
-cd paytrek
+cd paytrek/backend
+npm install
+
+cd paytrek/client
 npm install
 
 3. Create .env inside backend

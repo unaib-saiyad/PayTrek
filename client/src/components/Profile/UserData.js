@@ -22,24 +22,24 @@ function UserData({ isOpen, toggleUserModal}) {
                         </div>
                         <div className='mt-5 p-2 h-full pb-8 flex flex-col justify-between '>
                             <div>
-                            <div className='my-2 bg-rose-50 text-violet-700 p-3 rounded-xl flex justify-between items-center cursor-pointer hover:text-violet-500 hover:bg-rose-200'>
-                                <div className='flex items-center justify-start gap-3'>
-                                    <FaUser />
-                                    <h2 className='text-medium'>My Profile</h2>
+                                <div className='bg-rose-50 cursor-pointer dark:bg-gray-900 dark:hover:bg-gray-800 dark:text-white flex hover:bg-rose-200 hover:text-violet-500 items-center justify-between my-2 p-3 rounded-xl text-violet-700'>
+                                    <div className='flex items-center justify-start gap-3'>
+                                        <FaUser />
+                                        <h2 className='text-medium'>My Profile</h2>
+                                    </div>
+                                    <IoIosArrowForward/>
                                 </div>
-                                <IoIosArrowForward/>
+                                <div className='my-2 bg-gray-50 text-gray-700 dark:bg-gray-600 dark:hover:bg-gray-800 p-3 rounded-xl flex justify-between items-center cursor-pointer hover:text-gray-500 hover:bg-gray-200
+                                dark:text-gray-300 dark:hover:text-gray-100'>
+                                    <div className='flex items-center justify-start gap-3'>
+                                        <MdAlternateEmail/>
+                                        <h2 className='text-medium'>Email Address</h2>
+                                    </div>
+                                    <IoIosArrowForward/>
+                                </div>
                             </div>
                             <div className='my-2 bg-gray-50 text-gray-700 p-3 rounded-xl flex justify-between items-center cursor-pointer hover:text-gray-500 hover:bg-gray-200
-                            dark:bg-gray-700 dark:text-gray-300 dark:hover:text-gray-100 dark:hover:bg-gray-500'>
-                                <div className='flex items-center justify-start gap-3'>
-                                    <MdAlternateEmail/>
-                                    <h2 className='text-medium'>Email Address</h2>
-                                </div>
-                                <IoIosArrowForward/>
-                            </div>
-                            </div>
-                            <div className='my-2 bg-gray-50 text-gray-700 p-3 rounded-xl flex justify-between items-center cursor-pointer hover:text-gray-500 hover:bg-gray-200
-                            dark:bg-gray-700 dark:text-gray-300 dark:hover:text-gray-100 dark:hover:bg-gray-500'>
+                             dark:bg-gray-600 dark:hover:bg-gray-800 dark:text-gray-300 dark:hover:text-gray-100'>
                                 <div className='flex items-center justify-start gap-3'>
                                 <IoLogOutOutline />
                                     <h2 className='text-medium'>Logout</h2>
@@ -71,11 +71,11 @@ function UserData({ isOpen, toggleUserModal}) {
                             </div>
                             <div className='flex flex-col mt-5 text-gray-700 dark:text-gray-300 gap-1'>
                                 <label>Username: </label>
-                                <input type="text" className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter username" />
+                                <input type="text" className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900" placeholder="Enter username" />
                             </div>
                             <div className='flex flex-col mt-5 text-gray-700 dark:text-gray-300 gap-1'>
                                 <label>First Name: </label>
-                                <input type="text" className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter first" />
+                                <input type="text" className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900" placeholder="Enter first" />
                             </div>
                             <div className='mt-5 float-end mr-2'>
                                 <button className='border rounded-lg px-3 py-2 bg-blue-500 text-white dark:bg-blue-200 dark:text-gray-800'>Save</button>

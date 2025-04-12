@@ -12,7 +12,7 @@ const port = process.env.PORT || 4000;
 app.use(express.json());
 app.use(cors(corsOptions)); 
 
-app.use('/api', require('./routes.js'));
+app.use('/api', require('./routes/index.js'));
 
 app.listen(port, () => {
   console.log(`PayTrek app listening on port ${port}`)
