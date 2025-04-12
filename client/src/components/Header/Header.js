@@ -11,10 +11,10 @@ function Header({darkMode, toggleDarkMode, toggleSidebar}) {
                   <button className='inline-flex items-center p-2 text-sm text-green-500 rounded-lg sm-hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600 ' onClick={toggleSidebar}>
                     <HiOutlineMenuAlt2 className='text-2xl'/>
                   </button>
-                  <a href="#" className='flex ms-2 md:me-24 '>
+                  <button className='flex ms-2 md:me-24 '>
                     <MdSpaceDashboard className='h-8 me-3 textxl text-violet-500' />
                     <span className='self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white'>PayTrek</span>
-                  </a>
+                  </button>
                 </div>
 
                 <button className='dark:bg-slate-50 dark:text-slate-700 rounded-full p-2' onClick={toggleDarkMode}>

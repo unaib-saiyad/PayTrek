@@ -20,7 +20,7 @@ Login = async (req, res) => {
                 id: user.id
             }
         };
-        var token = jwt.sign(data, JWT_SECRET);
+        var token = jwt.sign(data, process.env.JWT_SECRET);
         res.json({ status: true, message: "user login successfully...", token: token});
 
     }catch (error) {

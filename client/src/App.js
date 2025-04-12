@@ -14,6 +14,7 @@ import {
 } from "react-router-dom";
 import Login from "./components/Authentication/Login";
 import Signup from "./components/Authentication/Signup";
+import Alert from "./components/Shared/Alert";
 
 function App() {
   const [darkMode, setdarkMode] = useState(false);
@@ -30,6 +31,7 @@ function App() {
   }
   return (
     <div className={`font-quickSand ${darkMode && 'dark'}`}>
+      <Alert/>
       <Router>
         <Routes>
           <Route exact path="/" element={<div><Login/></div>} />
