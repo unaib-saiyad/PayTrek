@@ -10,6 +10,7 @@ router.post('/createuser', isValidUserDetails, createUser);
 router.post('/login', isValidLogin, login);
 
 router.use('/incomeManagement', require('./incomeMan/incomeMan.js'));
+router.use('/expenseManagement', require('./expenseMan/expenseMan.js'));
 
 
 // Export the router
