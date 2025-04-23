@@ -15,7 +15,9 @@ import {
 import Login from "./components/Authentication/Login";
 import Signup from "./components/Authentication/Signup";
 import Alert from "./components/Shared/Alert";
-
+import AppNavigator from "./AppNavigator";
+import AppLocationTracker from "./AppLocationTracker";
+import { UserProvider } from "./context/shared/UserContext";
 function App() {
   const [darkMode, setdarkMode] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -33,6 +35,9 @@ function App() {
     <div className={`font-quickSand ${darkMode && 'dark'}`}>
       <Alert/>
       <Router>
+      <UserProvider>
+        <AppNavigator/>
+        <AppLocationTracker/>
         <Routes>
           <Route exact path="/" element={<div><Login/></div>} />
           <Route exact path="/signup" element={<div><Signup/></div>} />
@@ -53,6 +58,7 @@ function App() {
           </>} />
 
         </Routes>
+      </UserProvider>
       </Router>
       
 

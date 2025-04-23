@@ -12,8 +12,10 @@ import {
 import Input from './Input';
 import { useNavigate } from "react-router-dom";
 import {AlertContext} from "../../context/shared/AlertContext";
+import {useUser} from "../../context/shared/UserContext";
 
 function Login() {
+    const {triggerAuthUpdate} = useUser();
     let nevigate = useNavigate();
     const backendURL = process.env.REACT_APP_BACKEND_URL;
     const { showAlert } = useContext(AlertContext);
@@ -33,9 +35,11 @@ function Login() {
         // Email validation (basic check)
         if (!email) {
             setError({type: "email", message: "Email is required"});
+            setProcessing(false);
             return;
         } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
             setError({type: "email", message: "Enter a valid email address"});
+            setProcessing(false);
             return;
         }
 
@@ -43,6 +47,7 @@ function Login() {
         const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&_])[A-Za-z\d@$!%*?&_]{6,}$/;
         if (!passwordRegex.test(password)) {
             setError({type: "password", message: "Password must be at least 6 characters and include 1 letter, 1 number, and 1 special character."});
+            setProcessing(false);
             return;
         }
 
@@ -55,9 +60,9 @@ function Login() {
           });
         const json = await response.json();
         if(json.status){
-            localStorage.setItem('token', json.token);
             nevigate('/dashboard');
             showAlert(json.message, "success");
+            triggerAuthUpdate(json.token);
         }
         else{
             showAlert(json.error, "error");

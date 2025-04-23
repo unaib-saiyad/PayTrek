@@ -6,6 +6,14 @@ const UserSchema = new Schema({
         type: String,
         required: true,
     },
+    firstName: {
+        type: String,
+        default: function () { return this.username; }
+    },
+    lastName: {
+        type: String,
+        default: ""
+    },
     email:{
         type: String,
         required: true,
