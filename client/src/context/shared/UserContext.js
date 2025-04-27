@@ -34,6 +34,20 @@ export const UserProvider = ({ children }) => {
     }
   };
 
+  const refetchUser = async () => {
+    try {
+      const res = await axios.get(`${backendURL}/fetchUser`, {
+        headers: {
+          "auth-token": localStorage.getItem("token"),
+        },
+      });
+      setUser(res.data.user);
+    } catch (err) {
+      console.error("Refetch user error:", err);
+    }
+  };
+  
+
   useEffect(() => {
     const currentPath = location.pathname;
     if (!publicRoutes.includes(currentPath)) {
@@ -52,7 +66,7 @@ export const UserProvider = ({ children }) => {
   };
 
   return (
-    <UserContext.Provider value={{ user, setUser, loading, triggerAuthUpdate }}>
+    <UserContext.Provider value={{ user, setUser, loading, triggerAuthUpdate, refetchUser }}>
       {children}
     </UserContext.Provider>
   );
