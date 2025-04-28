@@ -18,6 +18,8 @@ import Alert from "./components/Shared/Alert";
 import AppNavigator from "./AppNavigator";
 import AppLocationTracker from "./AppLocationTracker";
 import { UserProvider } from "./context/shared/UserContext";
+import Loader from "./components/Shared/Loader";
+import IncomeLayout from "./components/Income/IncomeSource/IncomeLayout";
 function App() {
   const [darkMode, setdarkMode] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -33,18 +35,20 @@ function App() {
   }
   return (
     <div className={`font-quickSand ${darkMode && 'dark'}`}>
+      <Loader/>
       <Alert/>
       <Router>
       <UserProvider>
         <AppNavigator/>
         <AppLocationTracker/>
+          
         <Routes>
           <Route exact path="/" element={<div><Login/></div>} />
           <Route exact path="/signup" element={<div><Signup/></div>} />
           
           <Route exact path="/dashboard" element={<>
             <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} toggleSidebar={toggleSidebar} />
-            <Sidebar isSidebarOpen={isSidebarOpen} />
+            <Sidebar isSidebarOpen={isSidebarOpen} currActive='/dashboard' />
             <Main isSidebarOpen={isSidebarOpen}>
               <Content>
                 <Stats darkMode={darkMode}/>
@@ -53,15 +57,40 @@ function App() {
                   <Event/>
                 </div>
               </Content>
-              <Profile isUserModalOpen={isUserModalOpen} toggleUserModal={toggleUserModal} />
+            <Profile isUserModalOpen={isUserModalOpen} toggleUserModal={toggleUserModal} />
+            </Main>
+            
+          </>} />
+          <Route exact path="/income" element={<>
+            <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} toggleSidebar={toggleSidebar} />
+            <Sidebar isSidebarOpen={isSidebarOpen} currActive='/income' />
+            <Main isSidebarOpen={isSidebarOpen}>
+                  <IncomeLayout/>
+            </Main>
+          </>} />
+          <Route exact path="/Expence" element={<>
+            <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} toggleSidebar={toggleSidebar} />
+            <Sidebar isSidebarOpen={isSidebarOpen} currActive='/Expence' />
+            <Main isSidebarOpen={isSidebarOpen}>
+              <Content>
+              Expence
+              </Content>
+            </Main>
+          </>} />
+          <Route exact path="/Reports" element={<>
+            <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} toggleSidebar={toggleSidebar} />
+            <Sidebar isSidebarOpen={isSidebarOpen} currActive='/Reports' />
+            <Main isSidebarOpen={isSidebarOpen}>
+              <Content>
+              Reports
+              </Content>
             </Main>
           </>} />
 
         </Routes>
+
       </UserProvider>
       </Router>
-      
-
     </div>
   );
 }

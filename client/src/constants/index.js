@@ -10,11 +10,10 @@ import {
 } from "react-icons/io";
 import {
   FaChartBar,
-  FaCalendarAlt,
-  FaFacebookMessenger,
-  FaUsersCog,
-  FaListAlt,
+  FaMoneyCheckAlt,
 } from "react-icons/fa";
+import { FaFileInvoiceDollar } from "react-icons/fa6";
+import { GiPayMoney } from "react-icons/gi";
 
 import user01 from "../assets/user01.png";
 import user02 from "../assets/user02.png";
@@ -22,44 +21,39 @@ import user03 from "../assets/user03.png";
 
 export const links = [
   {
-    href: "#",
+    href: "/dashboard",
     icon: FaChartBar,
-    text: "Dashboard",
+    text: "Dashboard"
   },
   {
-    href: "#",
-    icon: FaCalendarAlt,
-    text: "Kanban",
-    badge: {
-      text: "Pro",
-      color: "bg-gray-100 text-gray-800",
-      darkColor: "dark:bg-gray-700 dark:text-gray-300",
-    },
+    href: "/income",
+    icon: FaMoneyCheckAlt,
+    text: "Income",
+    // badge: {
+    //   text: "Pro",
+    //   color: "bg-gray-100 text-gray-800",
+    //   darkColor: "dark:bg-gray-700 dark:text-gray-300",
+    // },
   },
   {
-    href: "#",
-    icon: FaFacebookMessenger,
-    text: "Inbox",
-    badge: {
-      text: "4",
-      color: "bg-blue-100 text-blue-800",
-      darkColor: "dark:bg-blue-900 dark:text-blue-300",
-    },
+    href: "/Expence",
+    icon: GiPayMoney,
+    text: "Expence",
+    // badge: {
+    //   text: "4",
+    //   color: "bg-blue-100 text-blue-800",
+    //   darkColor: "dark:bg-blue-900 dark:text-blue-300",
+    // },
   },
   {
-    href: "#",
-    icon: FaUsersCog,
-    text: "Users",
-  },
-  {
-    href: "#",
-    icon: FaListAlt,
-    text: "Products", 
+    href: "/Reports",
+    icon: FaFileInvoiceDollar,
+    text: "Reports"
   },
   {
     href: "/",
     icon: IoIosLogOut,
-    text: "Logout",
+    text: "Logout"
   },
 ];
 

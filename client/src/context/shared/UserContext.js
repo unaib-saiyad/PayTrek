@@ -24,9 +24,9 @@ export const UserProvider = ({ children }) => {
         },
       });
       setUser(res.data.user);
-      console.log(res);
+      //console.log(res);
     } catch (err) {
-      console.error("User fetch error:", err);
+      //console.error("User fetch error:", err);
       showAlert("Please login to continue", "warning");
       navigateTo("/");
     } finally {
@@ -43,7 +43,8 @@ export const UserProvider = ({ children }) => {
       });
       setUser(res.data.user);
     } catch (err) {
-      console.error("Refetch user error:", err);
+      showAlert("Something went wrong!...", "warning");
+      //console.error("Refetch user error:", err);
     }
   };
   

@@ -4,13 +4,16 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {AlertProvider} from './context/shared/AlertContext';
+import {LoaderProvider} from './context/shared/LoaderContext';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <AlertProvider>
-        <App />
+      <LoaderProvider>
+          <App />
+      </LoaderProvider>
     </AlertProvider>
   </React.StrictMode>
 );

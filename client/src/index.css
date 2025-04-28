@@ -8,3 +8,11 @@
 *{
     @apply transition-colors duration-200;
 }
+
+aside li a.active{
+    background: bisque;
+}
+
+.dark aside li a.active{
+    background: black;
+}
