@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import Card from '../../Stats/Card'
 import { SiCrowdsource } from "react-icons/si";
 import { MdCalendarMonth } from "react-icons/md";
@@ -7,25 +7,52 @@ import BarChart from '../../Stats/BarChart';
 import LineChart from '../../ChartsAndGraphs/LineChart';
 import { CiMenuKebab } from "react-icons/ci";
 import IncomeList from './IncomeList';
+import { AlertContext } from '../../../context/shared/AlertContext';
+import axios from 'axios';
+import { convertCurrency } from '../../../utils/convertCurrency';
 
 function IncomeLayout() {
+  const backendURL = process.env.REACT_APP_BACKEND_URL;
+  const [incomeSource, setIncomeSource] = useState([]);
+  const {showAlert} = useContext(AlertContext);
+  const totalMonthlyIncome = incomeSource.reduce((acc, curr) => {
+    return acc + convertCurrency(curr.amount, curr.currency, 'INR');
+  }, 0);
+  const totalYearlyIncome = totalMonthlyIncome * 12;
+  useEffect(() => {
+    const fetchIncomeSource = async ()=>{
+      try{
+        const res = await axios.get(`${backendURL}/incomeManagement/getIncomeSources`, {
+          headers: {
+              "auth-token": localStorage.getItem("token"),
+          },
+          });
+          setIncomeSource(res.data.data);
+      }
+      catch{
+        showAlert('Something went wrong!...', 'error');
+      }
+    }
+    fetchIncomeSource();
+  }, [])
+  
   const cardsData = [
     {
       title: "Total Income Sources",
       icon: SiCrowdsource,
-      count: 2,
+      count: incomeSource.length,
       bgColor: "bg-gray-100",
     },
     {
       title: "Total Monthly Income",
       icon: BsCalendarMonth,
-      count: 50000,
+      count: totalMonthlyIncome + ' $',
       bgColor: "bg-blue-100",
     },
     {
-      title: "Total Yearly Income(April 2025)",
+      title: "Total Yearly Income",
       icon: MdCalendarMonth,
-      count: 125000,
+      count: totalYearlyIncome + ' ₹',
       bgColor: "bg-yellow-100",
     },
   ];
@@ -43,7 +70,7 @@ function IncomeLayout() {
               <h1 className=''>List of incomes</h1>
               <CiMenuKebab className='cursor-pointer hover:text-gray-500' />
             </div>
-            <IncomeList />
+            <IncomeList data={incomeSource} />
           </div>
           {/* <div className='bg-white rounded-lg dark:bg-gray-500 border border-gray-300 lg:col-span-1 md:col-span-1 col-span-2'>
             <div className='p-4 text-black font-bold text-lg'>

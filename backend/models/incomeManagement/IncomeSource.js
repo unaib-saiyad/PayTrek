@@ -8,7 +8,7 @@ const IncomeSourceSchema = new Schema({
     type: { type: String, enum: ['fixed', 'variable'], default: 'fixed' },
     category: { type: String, required: true },
     frequency: { type: String, enum: ['monthly', 'weekly', 'bi-weekly', 'quarterly'], default: 'monthly' },
-    currency: { type: String, default: 'INR' },
+    currency: { type: String, enum: ['INR', 'USD', 'EUR', 'AED'], default: 'INR' },
     startDate: { type: Date, required: true },
     endDate: { type: Date },
     isActive: { type: Boolean, default: true },

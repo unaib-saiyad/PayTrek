@@ -1,7 +1,8 @@
 import React from 'react'
-import { FaMoon, FaSun } from 'react-icons/fa';
+import { FaMoon, FaSun, FaRupeeSign } from 'react-icons/fa';
 import { HiOutlineMenuAlt2 } from 'react-icons/hi';
 import { MdSpaceDashboard } from 'react-icons/md';
+
 function Header({darkMode, toggleDarkMode, toggleSidebar}) {
   return (
     <nav className='fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700'>
@@ -16,10 +17,15 @@ function Header({darkMode, toggleDarkMode, toggleSidebar}) {
                     <span className='self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white'>PayTrek</span>
                   </button>
                 </div>
+                <div>
+                <button className='dark:bg-slate-50 dark:text-slate-700 rounded-full p-2 cursor-pointer mr-2 hover:bg-gray-100'>
+                  {<FaRupeeSign />}
+                </button>
 
-                <button className='dark:bg-slate-50 dark:text-slate-700 rounded-full p-2' onClick={toggleDarkMode}>
+                <button className='dark:bg-slate-50 dark:text-slate-700 rounded-full p-2 hover:bg-gray-100' onClick={toggleDarkMode}>
                   {darkMode? <FaSun />: <FaMoon />}
                 </button>
+                </div>
             </div>
         </div>
     </nav>
