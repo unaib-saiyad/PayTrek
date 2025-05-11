@@ -9,11 +9,14 @@ exports.validateIncomeSource = [
     .isFloat({ gt: 0 })
     .withMessage("Amount must be a number greater than 0"),
 
-  body("category")
-    .notEmpty()
-    .withMessage("Category is required"),
-
   body("startDate")
+    .optional({ checkFalsy: true }) 
+    .isISO8601()
+    .toDate()
+    .withMessage("Start date must be a valid date"),
+
+  body("endDate")
+    .optional({ checkFalsy: true }) // skip validation if empty, null, undefined
     .isISO8601()
     .toDate()
     .withMessage("Start date must be a valid date"),

@@ -6,35 +6,129 @@ import { BsCalendarMonth } from "react-icons/bs";
 import BarChart from '../../Stats/BarChart';
 import LineChart from '../../ChartsAndGraphs/LineChart';
 import { CiMenuKebab } from "react-icons/ci";
+import { MdAdd } from "react-icons/md";
+
 import IncomeList from './IncomeList';
 import { AlertContext } from '../../../context/shared/AlertContext';
 import axios from 'axios';
 import { convertCurrency } from '../../../utils/convertCurrency';
+import { LoaderContext } from '../../../context/shared/LoaderContext';
+import ModalForms from '../../Shared/ModalForms';
 
 function IncomeLayout() {
   const backendURL = process.env.REACT_APP_BACKEND_URL;
   const [incomeSource, setIncomeSource] = useState([]);
   const {showAlert} = useContext(AlertContext);
+  const {toggleLoader} = useContext(LoaderContext);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [addFormData, setAddFormData] = useState({
+      "name": "",
+      "amount": 0,
+      "type": "",
+      "category": "",
+      "frequency": "",
+      "currency": "",
+      "taxable": false,
+      "notes": "",
+      "startDate": null,
+      "isActive": true
+    });
+  const addFields = [
+    { name: 'name', label: 'Name', type: 'text', required: true, placeHolder: "Name (ex: Regular Job/ Freelancing)" },
+    { name: 'amount', label: 'Amount', type: 'number', required: true, placeHolder: "Amout" },
+    { name: 'type', label: 'Type', type: 'select', required: true, placeHolder: "Type",
+      options: [
+        { label: 'Fixed', value: 'fixed' },
+        { label: 'Variable', value: 'variable' },
+      ],
+    },  
+    { name: 'category', label: 'Category', type: 'text', required: false, placeHolder: "Category (ex: Side Hustle)" },
+    { name: 'frequency', label: 'Frequency', type: 'select', required: true, placeHolder: "Frequency",
+      options: [
+        { label: 'monthly', value: 'monthly' },
+        { label: 'weekly', value: 'weekly' },
+        { label: 'bi-weekly', value: 'bi-weekly' },
+        { label: 'quarterly', value: 'quarterly' },
+      ],  
+    },
+    { name: 'currency', label: 'Currency', type: 'select', required: true, placeHolder: "Currency",
+      options: [
+        { label: 'INR', value: 'INR' },
+        { label: 'USD', value: 'USD' },
+        { label: 'EUR', value: 'EUR' },
+        { label: 'AED', value: 'AED' },
+      ], 
+    },
+    { name: 'startDate', label: 'Start Date', type: 'date', required: true,  placeHolder: "Start Date", },
+    { name: 'taxable', label: 'Taxable', type: 'checkbox', required: true,  placeHolder: "Taxable", },
+    { name: 'notes', label: 'Notes', type: 'textarea', required: false,  placeHolder: "Notes", },
+  ];
+
   const totalMonthlyIncome = incomeSource.reduce((acc, curr) => {
     return acc + convertCurrency(curr.amount, curr.currency, 'INR');
   }, 0);
   const totalYearlyIncome = totalMonthlyIncome * 12;
-  useEffect(() => {
-    const fetchIncomeSource = async ()=>{
-      try{
-        const res = await axios.get(`${backendURL}/incomeManagement/getIncomeSources`, {
-          headers: {
-              "auth-token": localStorage.getItem("token"),
-          },
-          });
-          setIncomeSource(res.data.data);
-      }
-      catch{
-        showAlert('Something went wrong!...', 'error');
-      }
+
+  const fetchIncomeSources = async ()=>{
+    toggleLoader(true);
+    try{
+      const res = await axios.get(`${backendURL}/incomeManagement/getIncomeSources`, {
+        headers: {
+            "auth-token": localStorage.getItem("token"),
+        },
+        });
+        setIncomeSource(res.data.data);
     }
-    fetchIncomeSource();
-  }, [])
+    catch{
+      showAlert('Something went wrong!...', 'error');
+    }
+    setTimeout(()=>{
+      toggleLoader(false);
+    }, 500);
+  }
+
+  useEffect(() => {
+    fetchIncomeSources();
+  }, []);
+
+  const handleAdd = ()=>{
+    setIsModalOpen(true);
+  }
+
+  const handleAddSubmit = async () => {
+    toggleLoader(true);
+  
+    try {
+      const res = await axios.post(`${backendURL}/incomeManagement/createIncomeSource`, addFormData, {
+        headers: {
+          "auth-token": localStorage.getItem("token"),
+        },
+      });
+      if(res.status){
+        showAlert("Income source added successfully!", "success");
+        await fetchIncomeSources();    
+        setAddFormData({
+          name: "",
+          amount: 0,
+          type: "",
+          category: "",
+          frequency: "",
+          currency: "",
+          taxable: false,
+          notes: "",
+          isActive: true,
+          startDate: null,
+        });
+        setIsModalOpen(false);
+      }
+  
+    } catch (e) {
+      console.log(e);
+      showAlert("Something went wrong while adding income!", "error");
+    }
+    setTimeout(()=>toggleLoader(false), 500);
+  };
   
   const cardsData = [
     {
@@ -65,12 +159,15 @@ function IncomeLayout() {
           })}
         </div>
         <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-5 h-[70vh]'>
-          <div className='bg-white rounded-lg dark:bg-gray-500 border border-gray-300 col-span-3'>
+          <div className='bg-white rounded-lg dark:bg-gray-700 border border-gray-300 col-span-3'>
             <div className='p-4 text-black font-bold text-lg flex justify-between'>
-              <h1 className=''>List of incomes</h1>
-              <CiMenuKebab className='cursor-pointer hover:text-gray-500' />
+              <h1 className='dark:text-gray-100'>List of incomes</h1>
+              <div className='flex dark:text-gray-100'>
+                <MdAdd className='cursor-pointer hover:text-gray-500 dark:hover:text-black' onClick={handleAdd} title='add' />
+                <CiMenuKebab className='cursor-pointer hover:text-gray-500 dark:hover:text-black' title='options' />
+              </div>
             </div>
-            <IncomeList data={incomeSource} />
+            <IncomeList data={incomeSource} fetchData={fetchIncomeSources} />
           </div>
           {/* <div className='bg-white rounded-lg dark:bg-gray-500 border border-gray-300 lg:col-span-1 md:col-span-1 col-span-2'>
             <div className='p-4 text-black font-bold text-lg'>
@@ -94,6 +191,15 @@ function IncomeLayout() {
           </div>
         </div>
       </div>
+      <ModalForms
+        title = "Add Income Source"
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        fields={addFields}
+        onSubmit={handleAddSubmit}
+        formData={addFormData}
+        setFormData={setAddFormData}
+      />
     </>
   )
 }

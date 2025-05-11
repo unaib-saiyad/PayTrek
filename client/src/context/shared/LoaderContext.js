@@ -5,8 +5,8 @@ export const LoaderContext = createContext();
 export const LoaderProvider = ({ children }) => {
   const [loader, setLoader] = useState(false);
   // Show loader
-  const toggleLoader = () => {
-    setLoader(!loader);
+  const toggleLoader = (value) => {
+    setLoader(value);
   };
 
   return (

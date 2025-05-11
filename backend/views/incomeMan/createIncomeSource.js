@@ -16,8 +16,8 @@ const createIncomeSource = async (req, res) => {
       notes
     } = req.body;
 
-    if (!name || !amount || !category || !startDate) {
-      return res.status(400).json({ message: "Please fill all required fields." });
+    if (!name || !amount || !startDate) {
+      return res.status(400).json({status: false, message: "Please fill all required fields." });
     }
 
     const newIncomeSource = new IncomeSource({
@@ -38,6 +38,7 @@ const createIncomeSource = async (req, res) => {
     const savedIncome = await newIncomeSource.save();
 
     return res.status(201).json({
+      status: true, 
       message: "Income source created successfully.",
       data: savedIncome
     });
@@ -45,6 +46,7 @@ const createIncomeSource = async (req, res) => {
   } catch (error) {
     console.error("Error in createIncomeSource:", error.message);
     return res.status(500).json({
+      status: false,
       message: "Server Error",
       error: error.message
     });
