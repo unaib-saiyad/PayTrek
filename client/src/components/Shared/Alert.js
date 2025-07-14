@@ -18,7 +18,7 @@ function Alert() {
   return (
      <div role="alert" 
      className={`mb-4 z-50 absolute font-mono flex w-full p-3 text-sm mt-2 sticky rounded-md ${alertStyles[alert.type]}`}
-     style={{'top': '65px', 'z-index': '10000000'}}
+     style={{'top': '65px', 'zIndex': '10000000'}}
      >
      {alert.message}
      <button onClick={handleClose} className="flex items-center justify-center transition-all w-8 h-8 rounded-md text-white hover:bg-white/10 active:bg-white/10 absolute top-1.5 right-1.5" type="button">

@@ -20,6 +20,7 @@ import AppLocationTracker from "./AppLocationTracker";
 import { UserProvider } from "./context/shared/UserContext";
 import Loader from "./components/Shared/Loader";
 import IncomeLayout from "./components/Income/IncomeSource/IncomeLayout";
+import IncomeHisLayout from "./components/Income/IncomeHistory/IncomeHisLayout";
 function App() {
   const [darkMode, setdarkMode] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -66,6 +67,13 @@ function App() {
             <Sidebar isSidebarOpen={isSidebarOpen} currActive='/income' />
             <Main isSidebarOpen={isSidebarOpen}>
                   <IncomeLayout/>
+            </Main>
+          </>} />
+          <Route exact path="/income/:__id/history" element={<>
+            <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} toggleSidebar={toggleSidebar} />
+            <Sidebar isSidebarOpen={isSidebarOpen} currActive='/income' />
+            <Main isSidebarOpen={isSidebarOpen}>
+                  <IncomeHisLayout/>
             </Main>
           </>} />
           <Route exact path="/Expence" element={<>

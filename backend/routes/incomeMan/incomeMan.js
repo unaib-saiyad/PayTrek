@@ -33,7 +33,7 @@ router.put('/updateIncomeSource/:id', auth, validateIncomeSourceUpdate, validate
 router.delete('/deleteIncomeSource/:id', auth, deleteIncomeSource);
  
 router.post('/createIncomeHistory', auth, validateIncomeHistory, validateRequest, createIncomeHistory);
-router.get('/getIncomeHistory/:incomeSource', auth, getIncomeHistory);
+router.get('/getIncomeHistory/:incomeId', auth, getIncomeHistory);
 router.put('/updateIncomeHistory/:id', auth, validateIncomeHistoryUpdate, validateRequest, updateIncomeHistory);
 router.delete('/deleteIncomeHistory/:id', auth, deleteIncomeHistory);
 

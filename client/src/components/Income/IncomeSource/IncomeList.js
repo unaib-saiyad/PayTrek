@@ -2,12 +2,14 @@ import React, {useState, useContext} from 'react'
 import AlertModal from '../../Shared/AlertModal';
 import ModalForms from '../../Shared/ModalForms';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { AlertContext } from '../../../context/shared/AlertContext';
 import { LoaderContext } from '../../../context/shared/LoaderContext';
 import { FaTrash, FaEye } from "react-icons/fa";
 import { MdModeEdit } from "react-icons/md";
 
 function IncomeList({data, fetchData}) {
+    const navigate = useNavigate();
     const backendURL = process.env.REACT_APP_BACKEND_URL;
     const {showAlert} = useContext(AlertContext);
     const {toggleLoader} = useContext(LoaderContext);
@@ -107,6 +109,10 @@ function IncomeList({data, fetchData}) {
         }
         setTimeout(()=>toggleLoader(false), 500);
       };
+    
+    const handleView = async (id) =>{
+      navigate(`/income/${id}/history`);
+    }
 
     return (
         <>
@@ -131,7 +137,7 @@ function IncomeList({data, fetchData}) {
                             <td className="py-2">{new Date(item.startDate).toLocaleDateString()}</td>
                             <td className="py-2">{item.endDate?new Date(item.endDate).toLocaleDateString(): "-"}</td>
                             <td className="py-2">
-                                <button title="view" className="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600">
+                                <button onClick={()=>{handleView(item._id)}} title="view" className="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600">
                                     <FaEye/>
                                 </button>
                                 <button onClick={()=>{handleEdit(item)}} title="edit" className="ml-1 px-3 py-1 text-sm bg-orange-400 text-white rounded hover:bg-orange-500">
