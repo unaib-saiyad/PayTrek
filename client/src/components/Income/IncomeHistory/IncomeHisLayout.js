@@ -10,7 +10,6 @@ import LineChart from '../../ChartsAndGraphs/LineChart';
 import { CiMenuKebab } from "react-icons/ci";
 import { MdAdd } from "react-icons/md";
 
-import IncomeList from '../IncomeSource/IncomeList';
 import { AlertContext } from '../../../context/shared/AlertContext';
 import axios from 'axios';
 import { convertCurrency } from '../../../utils/convertCurrency';
@@ -23,9 +22,18 @@ function IncomeHisLayout() {
   const { __id } = useParams();
   const backendURL = process.env.REACT_APP_BACKEND_URL;
   const [incomeHistories, setIncomeHistories] = useState([]);
+  const [isEditModal, setIsEditModal] = useState(false);
   const {showAlert} = useContext(AlertContext);
   const {toggleLoader} = useContext(LoaderContext);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editFormData, setEditFormData] = useState(null);
+
+  const fields = [
+    { name: 'month', label: 'Month', type: 'date', required: true,  placeHolder: "Month", },
+    { name: 'adjustment', label: 'Adjustment', type: 'number', required: true,  placeHolder: "Adjustment", },
+    { name: 'inHandAmount', label: 'In Hand Amount', type: 'number', required: true,  placeHolder: "In Hand Amount", },
+    { name: 'reason', label: 'Reason', type: 'text', required: false,  placeHolder: "Reason for adjustment", },
+  ];
+
   const fetchHistory = async () => {
       debugger;
       toggleLoader(true);
@@ -69,15 +77,34 @@ function IncomeHisLayout() {
     ];
     
   const handleDelete = async (id)=>{
-      
-  }
-
-  const handleOk = async ()=>{
-      
+      alert('Delete')
   }
 
   const handleEdit = (data)=>{
-      
+    setEditFormData(data);
+    setIsEditModal(true);
+  }
+  const handleEditSubmit = async ()=>{
+    toggleLoader(true);
+    try{
+      const res = await axios.put(`${backendURL}/incomeManagement/updateIncomeHistory/${editFormData._id}`, editFormData, {
+        headers: {
+          "auth-token": localStorage.getItem("token"),
+        },
+      });
+      if(res.status){
+        fetchHistory();
+        setIsEditModal(false);
+        setEditFormData(null);
+      }
+      else{
+        showAlert(res.message, 'error');
+      }
+    }
+    catch{
+      showAlert("Something went wrong!...", 'error');
+    }
+    setTimeout(()=>toggleLoader(false), 500);
   }
   return (
     <>
@@ -109,6 +136,16 @@ function IncomeHisLayout() {
           </div>
         </div>
       </div>
+
+      <ModalForms
+                title = "Edit Income History"
+                isOpen={isEditModal}
+                onClose={() => setIsEditModal(false)}
+                fields={fields}
+                onSubmit={handleEditSubmit}
+                formData={editFormData}
+                setFormData={setEditFormData}
+            />
     </>
   )
 }
