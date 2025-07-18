@@ -15,6 +15,7 @@ import axios from 'axios';
 import { convertCurrency } from '../../../utils/convertCurrency';
 import { LoaderContext } from '../../../context/shared/LoaderContext';
 import ModalForms from '../../Shared/ModalForms';
+import AlertModal from '../../Shared/AlertModal';
 
 import Grid from '../../Shared/Grid';
 
@@ -26,7 +27,17 @@ function IncomeHisLayout() {
   const {showAlert} = useContext(AlertContext);
   const {toggleLoader} = useContext(LoaderContext);
   const [editFormData, setEditFormData] = useState(null);
-
+  const [isAlertModal, setIsAlertModal] = useState(false);
+  const [delteId, setDeleteId] = useState(null);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [addFormData, setAddFormData] = useState({
+    incomeSource: __id,
+    month: "",
+    adjustment: 0,
+    inHandAmount: 0,
+    reason: ""
+  });
+  
   const fields = [
     { name: 'month', label: 'Month', type: 'date', required: true,  placeHolder: "Month", },
     { name: 'adjustment', label: 'Adjustment', type: 'number', required: true,  placeHolder: "Adjustment", },
@@ -55,6 +66,7 @@ function IncomeHisLayout() {
   useEffect(() => {
       fetchHistory();
     }, [__id]);
+
   const cardsData = [
         {
           title: "Total",
@@ -76,14 +88,16 @@ function IncomeHisLayout() {
         },
     ];
     
-  const handleDelete = async (id)=>{
-      alert('Delete')
+  const handleDelete = async (incomeHis)=>{
+    setDeleteId(incomeHis._id);
+    setIsAlertModal(true);
   }
 
   const handleEdit = (data)=>{
     setEditFormData(data);
     setIsEditModal(true);
   }
+
   const handleEditSubmit = async ()=>{
     toggleLoader(true);
     try{
@@ -106,6 +120,66 @@ function IncomeHisLayout() {
     }
     setTimeout(()=>toggleLoader(false), 500);
   }
+
+  const handleOk = async ()=>{
+    toggleLoader(true);
+    try{
+      let res = await axios.delete(`${backendURL}/incomeManagement/deleteIncomeHistory/${delteId}`,{
+        headers: {
+          "auth-token": localStorage.getItem("token"),
+          },
+      });
+      if(res.data.status){
+        showAlert("Income source deleted successfully!", "success");
+        fetchHistory();
+      }
+      else{
+        showAlert(res.data.message, "error");
+      }
+    }
+    catch(err){
+      showAlert("Something went wrong!...", "error");
+    }
+    setDeleteId(null);
+    setIsAlertModal(false);
+    setTimeout(()=>toggleLoader(false), 500);
+  }
+
+  const handleAdd = async ()=>{
+    setIsAddModalOpen(true);
+  }
+  
+  const handleAddSubmit = async () => {
+    toggleLoader(true);
+  
+    try {
+      const res = await axios.post(`${backendURL}/incomeManagement/createIncomeHistory`, addFormData, {
+        headers: {
+          "auth-token": localStorage.getItem("token"),
+        },
+      });
+      if(res.data.status){
+        showAlert("Income source added successfully!", "success");
+        await fetchHistory();    
+        setAddFormData({
+          incomeSource: __id,
+          month: "",
+          adjustment: 0,
+          inHandAmount: 0,
+          reason: ""
+        });
+        setIsAddModalOpen(false);
+      }
+      else{
+        showAlert(res.data.message, "error");
+      }
+  
+    } catch (e) {
+      showAlert("Something went wrong while adding income!", "error");
+    }
+    setTimeout(()=>toggleLoader(false), 500);
+  };
+
   return (
     <>
       <div className="flex flex-col gap-5" style={{ width: "100%" }}>
@@ -119,7 +193,7 @@ function IncomeHisLayout() {
             <div className='p-4 text-black font-bold text-lg flex justify-between'>
               <h1 className='dark:text-gray-100'>List of incomes histories</h1>
               <div className='flex dark:text-gray-100'>
-                <MdAdd className='cursor-pointer hover:text-gray-500 dark:hover:text-black' onClick={()=>{debugger}} title='add' />
+                <MdAdd className='cursor-pointer hover:text-gray-500 dark:hover:text-black' onClick={handleAdd} title='add' />
                 <CiMenuKebab className='cursor-pointer hover:text-gray-500 dark:hover:text-black' title='options' />
               </div>
             </div>
@@ -145,6 +219,23 @@ function IncomeHisLayout() {
                 onSubmit={handleEditSubmit}
                 formData={editFormData}
                 setFormData={setEditFormData}
+            />
+
+      <ModalForms
+        title = "Add Income History"
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        fields={fields}
+        onSubmit={handleAddSubmit}
+        formData={addFormData}
+        setFormData={setAddFormData}
+      />
+
+      <AlertModal 
+                isOpen={isAlertModal}
+                onClose={()=>setIsAlertModal(false)}
+                message="Do you want to delete?..."
+                handleOk={handleOk}
             />
     </>
   )

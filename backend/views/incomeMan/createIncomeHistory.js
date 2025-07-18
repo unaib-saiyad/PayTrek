@@ -7,15 +7,15 @@ const createIncomeHistory = async (req, res) => {
     // Optional duplication check (same month for same incomeSource)
     const exists = await IncomeHistory.findOne({ incomeSource, month });
     if (exists) {
-      return res.status(400).json({ message: `History already exists for ${month}.` });
+      return res.status(400).json({ status: false, message: `History already exists for ${month}.` });
     }
 
     const history = new IncomeHistory({ incomeSource, month, adjustment, reason, inHandAmount });
     await history.save();
 
-    return res.status(201).json({ message: 'Income history created', data: history });
+    return res.status(201).json({ status: true, message: 'Income history created', data: history });
   } catch (err) {
-    return res.status(500).json({ message: 'Server Error', error: err.message });
+    return res.status(500).json({ status: false, message: 'Server Error', error: err.message });
   }
 };
 
