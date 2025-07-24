@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams } from "react-router-dom";
 import Card from '../../Stats/Card'
-
+import { useNavigate } from 'react-router-dom';
 import { SiCrowdsource } from "react-icons/si";
 import { MdCalendarMonth } from "react-icons/md";
 import { BsCalendarMonth } from "react-icons/bs";
@@ -9,10 +9,10 @@ import BarChart from '../../Stats/BarChart';
 import LineChart from '../../ChartsAndGraphs/LineChart';
 import { CiMenuKebab } from "react-icons/ci";
 import { MdAdd } from "react-icons/md";
+import { IoIosArrowBack } from "react-icons/io";
 
 import { AlertContext } from '../../../context/shared/AlertContext';
 import axios from 'axios';
-import { convertCurrency } from '../../../utils/convertCurrency';
 import { LoaderContext } from '../../../context/shared/LoaderContext';
 import ModalForms from '../../Shared/ModalForms';
 import AlertModal from '../../Shared/AlertModal';
@@ -20,6 +20,7 @@ import AlertModal from '../../Shared/AlertModal';
 import Grid from '../../Shared/Grid';
 
 function IncomeHisLayout() {
+  const navigate = useNavigate();
   const { __id } = useParams();
   const backendURL = process.env.REACT_APP_BACKEND_URL;
   const [incomeHistories, setIncomeHistories] = useState([]);
@@ -66,7 +67,16 @@ function IncomeHisLayout() {
   useEffect(() => {
       fetchHistory();
     }, [__id]);
-
+    
+  const totalMonthlyIncome = incomeHistories.reduce((acc, curr) => {
+    return acc + curr.inHandAmount;
+  }, 0);
+  const newestHistories = incomeHistories.sort((a, b) => new Date(b.month) - new Date(a.month));
+  let totalYearlyIncome = 0;
+  let newestHistoryLen = incomeHistories.length>12?12:incomeHistories.length;
+  for(let i=0;i<newestHistoryLen;i++){
+    totalYearlyIncome+=newestHistories[i].inHandAmount;
+  }
   const cardsData = [
         {
           title: "Total",
@@ -75,15 +85,15 @@ function IncomeHisLayout() {
           bgColor: "bg-gray-100",
         },
         {
-          title: "Total Monthly Income",
+          title: "Average Monthly Income",
           icon: BsCalendarMonth,
-          count:  ' $',
+          count:  (totalMonthlyIncome/incomeHistories.length) || 0,
           bgColor: "bg-blue-100",
         },
         {
-          title: "Total Yearly Income",
+          title: "Total Yearly Income(last 12 months)",
           icon: MdCalendarMonth,
-          count: ' ₹',
+          count: totalYearlyIncome,
           bgColor: "bg-yellow-100",
         },
     ];
@@ -180,6 +190,10 @@ function IncomeHisLayout() {
     setTimeout(()=>toggleLoader(false), 500);
   };
 
+  const backButtonHandler = ()=>{
+    navigate(-1);
+  }
+
   return (
     <>
       <div className="flex flex-col gap-5" style={{ width: "100%" }}>
@@ -191,6 +205,9 @@ function IncomeHisLayout() {
         <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-5 h-[70vh]'>
           <div className='bg-white rounded-lg dark:bg-gray-700 border border-gray-300 col-span-3'>
             <div className='p-4 text-black font-bold text-lg flex justify-between'>
+              <span className='cursor-pointer' title='Back'>
+                <IoIosArrowBack onClick={backButtonHandler} className='hover:bg-gray-200 rounded' />
+              </span>
               <h1 className='dark:text-gray-100'>List of incomes histories</h1>
               <div className='flex dark:text-gray-100'>
                 <MdAdd className='cursor-pointer hover:text-gray-500 dark:hover:text-black' onClick={handleAdd} title='add' />
@@ -198,7 +215,7 @@ function IncomeHisLayout() {
               </div>
             </div>
             {/* <IncomeList data={incomeHistories} fetchData={[]} /> */}
-            <Grid columns={[{field:'month', type:"text"}, {field:'adjustment', type:"number"}, {field:'inHandAmount', type:"number"}, {field: 'updatedAt', type:"time"}]} data={incomeHistories} onDelete={handleDelete} onEdit={handleEdit} />
+            <Grid columns={[{field:'month', type:"time"}, {field:'adjustment', type:"number"}, {field:'inHandAmount', type:"number"}, {field: 'updatedAt', type:"time"}]} data={incomeHistories} onDelete={handleDelete} onEdit={handleEdit} />
           </div>
         </div>
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-5'>
