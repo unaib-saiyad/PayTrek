@@ -6,9 +6,9 @@ const createExpenseSource = async (req, res) => {
     data.user = req.user.id;
     const newExpense = new ExpenseSource(data);
     const saved = await newExpense.save();
-    return res.status(201).json({ message: 'Expense source created', data: saved });
+    return res.status(201).json({status: true,  message: 'Expense source created', data: saved });
   } catch (err) {
-    return res.status(500).json({ message: 'Server Error', error: err.message });
+    return res.status(500).json({status: false,  message: 'Server Error', error: err.message });
   }
 };
 

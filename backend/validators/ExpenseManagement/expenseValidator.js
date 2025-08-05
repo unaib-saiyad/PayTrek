@@ -6,7 +6,7 @@ exports.validateExpenseSource = [
   body('category').notEmpty().withMessage('Category is required'),
   body('startDate').isISO8601().toDate().withMessage('Start date must be valid'),
   body('type').optional().isIn(['fixed', 'variable']),
-  body('frequency').optional().isIn(['monthly', 'weekly', 'bi-weekly', 'quarterly']),
+  body('frequency').optional().isIn(['once', 'rarely', 'monthly', 'weekly', 'bi-weekly', 'quarterly']),
   body('currency').optional().isLength({ min: 3, max: 3 }),
   body('isRecurring').optional().isBoolean(),
   body('isActive').optional().isBoolean(),

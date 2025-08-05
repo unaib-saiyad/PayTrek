@@ -84,7 +84,7 @@ function ModalForms({ title, isOpen, fields, onSubmit, formData, setFormData, on
               ))}
             </div>
 
-            <div className="w-full absolute flex gap-2 mt-6 justify-end px-3 bottom-0 bg-white border-top dark:bg-gray-700 p-2">
+            <div className="w-full sticky flex gap-2 mt-6 justify-end px-3 bottom-0 bg-white border-top dark:bg-gray-700 p-2">
               <button
                 onClick={onClose}
                 type="button"

@@ -14,6 +14,7 @@ import { LoaderContext } from '../../../context/shared/LoaderContext';
 import { AlertContext } from '../../../context/shared/AlertContext';
 import Grid from '../../Shared/Grid';
 import ModalForms from '../../Shared/ModalForms';
+import AlertModal from '../../Shared/AlertModal';
 
 function Expense() {
     const backendURL = process.env.REACT_APP_BACKEND_URL;
@@ -28,12 +29,14 @@ function Expense() {
       "type": "",
       "frequency": "",
       "currency": "",
-      "startDate": "",
-      "endDate": "",
+      "startDate": new Date(),
+      "endDate": null,
       "isRecurring": true,
       "isActive": true,
       "notes": "",
     });
+    const [deleteModal, setDeleteModal] = useState(false);
+    const [deleteId, setDeleteId] = useState(null);
 
     const fetchExpenses = async () => {
         toggleLoader(true);
@@ -97,32 +100,103 @@ function Expense() {
       },  
       { name: 'frequency', label: 'Frequency', type: 'select', required: true,  placeHolder: "Frequency of Expense",
         options: [
+          { label: 'once', value: 'once' },
+          { label: 'rarely', value: 'rarely' },
           { label: 'monthly', value: 'monthly' },
           { label: 'weekly', value: 'weekly' },
           { label: 'bi-weekly', value: 'bi-weekly' },
           { label: 'quarterly', value: 'quarterly' },
         ],
       },      
+      { name: 'currency', label: 'Currency', type: 'select', required: true,  placeHolder: "Currency of Expense",
+        options: [
+          { label: 'INR', value: 'INR' },
+          { label: 'USD', value: 'USD' },
+          { label: 'EUR', value: 'EUR' },
+          { label: 'AED', value: 'AED' },
+        ],
+      },      
 
       { name: 'startDate', label: 'Start Date', type: 'date', required: true,  placeHolder: "Start Date", },
       { name: 'isRecurring', label: 'Is Recurring', type: 'checkbox', required: true,  placeHolder: "Is Recurring", },
       { name: 'notes', label: 'Notes', type: 'textarea', required: false,  placeHolder: "Notes", }
-    ]
+    ];
 
     const handleAdd = ()=>{
       setIsAddModalOpen(true);
     }
 
-    const handleAddSubmit = ()=>{
-
+    const handleAddSubmit = async ()=>{
+      toggleLoader(true);
+  
+      try {
+        const res = await axios.post(`${backendURL}/expenseManagement/createExpenseSource`, addFormData, {
+          headers: {
+            "auth-token": localStorage.getItem("token"),
+          },
+        });
+        if(res.data.status){
+          showAlert("Income source added successfully!", "success");
+          await fetchExpenses();    
+          setAddFormData({
+            "name": "",
+            "amount": 0,
+            "category": "",
+            "type": "",
+            "frequency": "",
+            "currency": "",
+            "startDate": new Date(),
+            "endDate": null,
+            "isRecurring": true,
+            "isActive": true,
+            "notes": "",
+          });
+          setIsAddModalOpen(false);
+        }
+        else{
+          showAlert("Something went wrong!...", "error");
+        }
+    
+      } catch (e) {
+        console.log(e);
+        showAlert("Something went wrong while adding expense!", "error");
+      }
+    setTimeout(()=>toggleLoader(false), 500);
     }
 
     const handleEdit = ()=>{
         debugger;
     }
 
-    const handleDelete = ()=>{
-        debugger;
+    const handleDelete = (item)=>{
+      setDeleteId(item._id);
+      setDeleteModal(true);
+    }
+
+    const handleDeleteOk = async ()=>{
+      debugger;
+      toggleLoader(true);
+      try{
+        const response = await axios.delete(`${backendURL}/expenseManagement/deleteExpenseSource/${deleteId}`,{
+          headers: {
+            "auth-token": localStorage.getItem("token"),
+          },
+        })
+        if(response.data.status){
+          showAlert("History deleted successfully!...", 'success');
+          fetchExpenses();
+        }
+        else{
+          showAlert("Something went wrong!...", 'error');
+        }
+      }
+      catch(err){
+        console.log(err);
+        showAlert("Server Error!...", 'error');
+      }
+      setDeleteId(null);
+      setDeleteModal(false);
+      setTimeout(()=>toggleLoader(false), 500);
     }
       
     return (
@@ -163,7 +237,14 @@ function Expense() {
           onSubmit={handleAddSubmit}
           formData={addFormData}
           setFormData={setAddFormData}
-        />    
+        />   
+
+        <AlertModal 
+          isOpen={deleteModal}
+          onClose={()=>setDeleteModal(false)}
+          message="Do you want to delete?..."
+          handleOk={handleDeleteOk}
+        /> 
       </>
     )
 }

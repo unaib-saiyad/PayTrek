@@ -7,7 +7,7 @@ const ExpenseSourceSchema = new Schema({
   amount: { type: Number, required: true },
   category: { type: String, required: true },
   type: { type: String, enum: ['fixed', 'variable'], default: 'variable' },
-  frequency: { type: String, enum: ['monthly', 'weekly', 'bi-weekly', 'quarterly'], default: 'monthly' },
+  frequency: { type: String, enum: ['once', 'rarely', 'monthly', 'weekly', 'bi-weekly', 'quarterly'], default: 'monthly' },
   currency: { type: String, default: 'INR' },
   startDate: { type: Date, required: true },
   endDate: { type: Date },
