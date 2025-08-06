@@ -22,6 +22,7 @@ import Loader from "./components/Shared/Loader";
 import IncomeLayout from "./components/Income/IncomeSource/IncomeLayout";
 import IncomeHisLayout from "./components/Income/IncomeHistory/IncomeHisLayout";
 import Expense from "./components/Expense/ExpenseSource/Expense";
+import ExpenseHistory from "./components/Expense/ExpenseHistory/ExpenseHistory";
 
 function App() {
   const [darkMode, setdarkMode] = useState(false);
@@ -83,6 +84,13 @@ function App() {
             <Sidebar isSidebarOpen={isSidebarOpen} currActive='/Expence' />
             <Main isSidebarOpen={isSidebarOpen}>
                 <Expense/>
+            </Main>
+          </>} />
+          <Route exact path="/Expense/:__id/history" element={<>
+            <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} toggleSidebar={toggleSidebar} />
+            <Sidebar isSidebarOpen={isSidebarOpen} currActive='/Expence' />
+            <Main isSidebarOpen={isSidebarOpen}>
+                <ExpenseHistory/>
             </Main>
           </>} />
           <Route exact path="/Reports" element={<>

@@ -7,10 +7,10 @@ const updateExpenseSource = async (req, res) => {
         req.body,
         { new: true }
       );
-      if (!updated) return res.status(404).json({ message: 'Not found or unauthorized' });
-      return res.status(200).json({ message: 'Updated', data: updated });
+      if (!updated) return res.status(404).json({ status: false, message: 'Not found or unauthorized' });
+      return res.status(200).json({ status: true, message: 'Updated', data: updated });
     } catch (err) {
-      return res.status(500).json({ message: 'Server Error', error: err.message });
+      return res.status(500).json({ status: false, message: 'Server Error', error: err.message });
     }
   };
   

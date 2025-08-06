@@ -8,6 +8,7 @@ import LineChart from '../../ChartsAndGraphs/LineChart';
 import { CiMenuKebab } from "react-icons/ci";
 import { MdAdd } from "react-icons/md";
 
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { LoaderContext } from '../../../context/shared/LoaderContext';
 
@@ -18,6 +19,7 @@ import AlertModal from '../../Shared/AlertModal';
 
 function Expense() {
     const backendURL = process.env.REACT_APP_BACKEND_URL;
+    const navigate = useNavigate();
     const {toggleLoader} = useContext(LoaderContext);
     const [expenseList, setExpenseList] = useState([]);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -36,7 +38,9 @@ function Expense() {
       "notes": "",
     });
     const [deleteModal, setDeleteModal] = useState(false);
-    const [deleteId, setDeleteId] = useState(null);
+    const [editModal, setEditModal] = useState(false);
+    const [editModalData, setEditModalData] = useState(false);
+    const [currId, setCurrId] = useState(null);
 
     const fetchExpenses = async () => {
         toggleLoader(true);
@@ -122,6 +126,41 @@ function Expense() {
       { name: 'notes', label: 'Notes', type: 'textarea', required: false,  placeHolder: "Notes", }
     ];
 
+    const editFields = [
+      { name: 'name', label: 'Name', type: 'text', required: true,  placeHolder: "Name of Expense", },
+      { name: 'amount', label: 'Amount', type: 'number', required: true,  placeHolder: "Amount of Expense", },
+      { name: 'category', label: 'Category', type: 'text', required: true,  placeHolder: "Category of Expense", },
+      { name: 'type', label: 'Type', type: 'select', required: true,  placeHolder: "Type of Expense",
+        options: [
+          { label: 'Fixed (Repeat)', value: 'fixed' },
+          { label: 'Variable (Rarely/Onetime)', value: 'variable' },
+        ],
+      },  
+      { name: 'frequency', label: 'Frequency', type: 'select', required: true,  placeHolder: "Frequency of Expense",
+        options: [
+          { label: 'once', value: 'once' },
+          { label: 'rarely', value: 'rarely' },
+          { label: 'monthly', value: 'monthly' },
+          { label: 'weekly', value: 'weekly' },
+          { label: 'bi-weekly', value: 'bi-weekly' },
+          { label: 'quarterly', value: 'quarterly' },
+        ],
+      },      
+      { name: 'currency', label: 'Currency', type: 'select', required: true,  placeHolder: "Currency of Expense",
+        options: [
+          { label: 'INR', value: 'INR' },
+          { label: 'USD', value: 'USD' },
+          { label: 'EUR', value: 'EUR' },
+          { label: 'AED', value: 'AED' },
+        ],
+      },      
+
+      { name: 'startDate', label: 'Start Date', type: 'date', required: true,  placeHolder: "Start Date", },
+      { name: 'isRecurring', label: 'Is Recurring', type: 'checkbox', required: true,  placeHolder: "Is Recurring", },
+      { name: 'isActive', label: 'Is Active', type: 'checkbox', required: true,  placeHolder: "Is Active", },
+      { name: 'notes', label: 'Notes', type: 'textarea', required: false,  placeHolder: "Notes", }
+    ];
+
     const handleAdd = ()=>{
       setIsAddModalOpen(true);
     }
@@ -164,12 +203,41 @@ function Expense() {
     setTimeout(()=>toggleLoader(false), 500);
     }
 
-    const handleEdit = ()=>{
-        debugger;
-    }
+    
+    const handleEdit = (data)=>{
+      setCurrId(data._id);
+      setEditModalData(data);
+      setEditModal(true);
+  }
+
+  const handleEditSubmit = async () => {
+      toggleLoader(true);
+    
+      try {
+        const res = await axios.put(`${backendURL}/expenseManagement/updateExpenseSource/${currId}`, editModalData, {
+          headers: {
+            "auth-token": localStorage.getItem("token"),
+          },
+        });
+        if(res.data.status){
+          showAlert("Expense source updated successfully!", "success");
+          fetchExpenses();
+          setEditModal(false);
+          setEditModalData(null);
+        }
+        else{
+          showAlert("Something went wrong!", "error");
+        }
+    
+      } catch (e) {
+        console.log(e);
+        showAlert("Something went wrong while updating income!", "error");
+      }
+      setTimeout(()=>toggleLoader(false), 500);
+    };
 
     const handleDelete = (item)=>{
-      setDeleteId(item._id);
+      setCurrId(item._id);
       setDeleteModal(true);
     }
 
@@ -177,7 +245,7 @@ function Expense() {
       debugger;
       toggleLoader(true);
       try{
-        const response = await axios.delete(`${backendURL}/expenseManagement/deleteExpenseSource/${deleteId}`,{
+        const response = await axios.delete(`${backendURL}/expenseManagement/deleteExpenseSource/${currId}`,{
           headers: {
             "auth-token": localStorage.getItem("token"),
           },
@@ -194,11 +262,13 @@ function Expense() {
         console.log(err);
         showAlert("Server Error!...", 'error');
       }
-      setDeleteId(null);
+      setCurrId(null);
       setDeleteModal(false);
       setTimeout(()=>toggleLoader(false), 500);
     }
       
+    const handleView = async (data) =>{ navigate(`/Expense/${data._id}/history`); }
+
     return (
       <>
         <div className="flex flex-col gap-5" style={{ width: "100%" }}>
@@ -216,7 +286,7 @@ function Expense() {
                   <CiMenuKebab className='cursor-pointer hover:text-gray-500 dark:hover:text-black' title='options' />
                 </div>
               </div>
-              <Grid columns={gridColumns} data={expenseList} onDelete={handleDelete} onEdit={handleEdit} />
+              <Grid columns={gridColumns} data={expenseList} onDelete={handleDelete} onEdit={handleEdit} onView={handleView} />
             </div>
           </div>
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-5'>
@@ -239,6 +309,15 @@ function Expense() {
           setFormData={setAddFormData}
         />   
 
+        <ModalForms
+          title = "Edit Expense Source"
+          isOpen={editModal}
+          onClose={() => setEditModal(false)}
+          fields={editFields}
+          onSubmit={handleEditSubmit}
+          formData={editModalData}
+          setFormData={setEditModalData}
+        />
         <AlertModal 
           isOpen={deleteModal}
           onClose={()=>setDeleteModal(false)}

@@ -19,7 +19,7 @@ exports.validateExpenseSourceUpdate = [
   body('category').optional().isString(),
   body('startDate').optional().isISO8601().toDate(),
   body('type').optional().isIn(['fixed', 'variable']),
-  body('frequency').optional().isIn(['monthly', 'weekly', 'bi-weekly', 'quarterly']),
+  body('frequency').optional().isIn(['once', 'rarely', 'monthly', 'weekly', 'bi-weekly', 'quarterly']),
   body('currency').optional().isLength({ min: 3, max: 3 }),
   body('isRecurring').optional().isBoolean(),
   body('isActive').optional().isBoolean(),
