@@ -280,7 +280,7 @@ function Expense() {
           <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-5 h-[70vh]'>
             <div className='bg-white rounded-lg dark:bg-gray-700 border border-gray-300 col-span-3'>
               <div className='p-4 text-black font-bold text-lg flex justify-between'>
-                <h1 className='dark:text-gray-100'>List of incomes histories</h1>
+                <h1 className='dark:text-gray-100'>List of expense source</h1>
                 <div className='flex dark:text-gray-100'>
                   <MdAdd className='cursor-pointer hover:text-gray-500 dark:hover:text-black' onClick={handleAdd} title='add' />
                   <CiMenuKebab className='cursor-pointer hover:text-gray-500 dark:hover:text-black' title='options' />
