@@ -59,24 +59,26 @@ function Expense() {
     useEffect(() => {
         fetchExpensesHist();
     }, []);
-      
+     
+    const expenseLen = expenseList.length;
+    const totalExpense = expenseList.reduce((x, y)=>x+=(y.actualAmount+y.adjustment),0); 
     const cardsData = [
           {
             title: "Total",
             icon: SiCrowdsource,
-            count: expenseList.length,
+            count: expenseLen,
             bgColor: "bg-gray-100",
           },
           {
             title: "Average Monthly Expense",
-            icon: BsCalendarMonth,
-            count:  0,
+            icon: BsCalendarMonth, 
+            count:  (totalExpense/expenseLen) || 0,
             bgColor: "bg-blue-100",
           },
           {
             title: "Total Yearly Expense",
             icon: MdCalendarMonth,
-            count: 0,
+            count: totalExpense || 0,
             bgColor: "bg-yellow-100",
           },
     ];
