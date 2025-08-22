@@ -18,6 +18,7 @@ import Alert from "./components/Shared/Alert";
 import AppNavigator from "./AppNavigator";
 import AppLocationTracker from "./AppLocationTracker";
 import { UserProvider } from "./context/shared/UserContext";
+import { CurrencyProvider } from "./context/shared/CurrencyContext";
 import Loader from "./components/Shared/Loader";
 import IncomeLayout from "./components/Income/IncomeSource/IncomeLayout";
 import IncomeHisLayout from "./components/Income/IncomeHistory/IncomeHisLayout";
@@ -42,6 +43,7 @@ function App() {
       <Loader/>
       <Alert/>
       <Router>
+      <CurrencyProvider>
       <UserProvider>
         <AppNavigator/>
         <AppLocationTracker/>
@@ -106,6 +108,7 @@ function App() {
         </Routes>
 
       </UserProvider>
+      </CurrencyProvider>
       </Router>
     </div>
   );

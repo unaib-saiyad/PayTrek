@@ -1,9 +1,13 @@
 import React from 'react'
-import { FaMoon, FaSun, FaRupeeSign } from 'react-icons/fa';
+import { FaMoon, FaSun } from 'react-icons/fa';
 import { HiOutlineMenuAlt2 } from 'react-icons/hi';
 import { MdSpaceDashboard } from 'react-icons/md';
-
+import { useCurrency } from '../../context/shared/CurrencyContext';
 function Header({darkMode, toggleDarkMode, toggleSidebar}) {
+  const { currency, changeCurrency, currTitle } = useCurrency();
+  const currencyHandler = ()=>{
+    changeCurrency();
+  }
   return (
     <nav className='fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700'>
         <div className='px-3 py-3 lg:px-5 lg-pl-3'>
@@ -18,8 +22,8 @@ function Header({darkMode, toggleDarkMode, toggleSidebar}) {
                   </button>
                 </div>
                 <div>
-                <button className='dark:bg-slate-50 dark:text-slate-700 rounded-full p-2 cursor-pointer mr-2 hover:bg-gray-100'>
-                  {<FaRupeeSign />}
+                <button className='dark:bg-slate-50 dark:text-slate-700 rounded-full p-2 cursor-pointer mr-2 hover:bg-gray-100' title={currTitle} onClick={currencyHandler}>
+                  {currency}
                 </button>
 
                 <button className='dark:bg-slate-50 dark:text-slate-700 rounded-full p-2 hover:bg-gray-100' onClick={toggleDarkMode}>
