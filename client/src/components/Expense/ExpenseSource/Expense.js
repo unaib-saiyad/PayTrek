@@ -16,6 +16,8 @@ import { AlertContext } from '../../../context/shared/AlertContext';
 import Grid from '../../Shared/Grid';
 import ModalForms from '../../Shared/ModalForms';
 import AlertModal from '../../Shared/AlertModal';
+import { convertCurrency } from '../../../utils/convertCurrency';
+import { useCurrency } from '../../../context/shared/CurrencyContext';
 
 function Expense() {
     const backendURL = process.env.REACT_APP_BACKEND_URL;
@@ -41,6 +43,7 @@ function Expense() {
     const [editModal, setEditModal] = useState(false);
     const [editModalData, setEditModalData] = useState(false);
     const [currId, setCurrId] = useState(null);
+    const { currency, currTitle } = useCurrency();
 
     const fetchExpenses = async () => {
         toggleLoader(true);
@@ -63,7 +66,7 @@ function Expense() {
         fetchExpenses();
     }, []);
     const expenseLen = expenseList.length;
-    const totalExpense = expenseList.reduce((x, y)=>x+=y.amount,0);
+    const totalExpense = expenseList.reduce((x, y)=>x+= convertCurrency(y.amount, y.currency, currTitle),0);
     const cardsData = [ 
           {
             title: "Total",
@@ -74,20 +77,20 @@ function Expense() {
           {
             title: "Average Monthly Expense",
             icon: BsCalendarMonth,
-            count:  (totalExpense/expenseLen) || 0,
+            count:  <span className='flex'>{parseFloat(totalExpense/expenseLen).toFixed(4) || 0} {currency}</span>,
             bgColor: "bg-blue-100",
           },
           {
             title: "Total Yearly Expense",
             icon: MdCalendarMonth,
-            count: totalExpense || 0,
+            count: <span className='flex'>{parseFloat(totalExpense).toFixed(4) || 0} {currency}</span>,
             bgColor: "bg-yellow-100",
           },
     ];
 
     const gridColumns = [
         {field:'name', type:"text"},
-         {field:'amount', type:"number"}, 
+         {field:'amount', type:"number" }, 
          {field:'category', type:"text"}, 
          {field: 'frequency', type:"text"},
          {field: 'currency', type:"text"},
@@ -268,7 +271,7 @@ function Expense() {
       setTimeout(()=>toggleLoader(false), 500);
     }
       
-    const handleView = async (data) =>{ navigate(`/Expense/${data._id}/history`); }
+    const handleView = async (data) =>{ navigate(`/Expense/${data._id}/history`, {state: {parentCurrency: data.currency}}); }
 
     return (
       <>

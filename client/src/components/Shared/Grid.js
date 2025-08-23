@@ -35,7 +35,7 @@ function Grid({
               >
                 {columns.map((col) => (
                   <td key={item._id + col.field} className="py-2">
-                    {col.type==='time' ?new Date(item[col.field]).toLocaleDateString():item[col.field]}
+                    {col.type==='time' ?new Date(item[col.field]).toLocaleDateString():(item[col.field])} {col.suffix || ""} { col.suffixField? item[col.suffixField]:"" }
                   </td>
                 ))}
                 <td className="py-2">

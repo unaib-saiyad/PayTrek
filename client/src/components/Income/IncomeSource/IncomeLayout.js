@@ -14,13 +14,13 @@ import axios from 'axios';
 import { convertCurrency } from '../../../utils/convertCurrency';
 import { LoaderContext } from '../../../context/shared/LoaderContext';
 import ModalForms from '../../Shared/ModalForms';
-
+import { useCurrency } from '../../../context/shared/CurrencyContext';
 function IncomeLayout() {
   const backendURL = process.env.REACT_APP_BACKEND_URL;
   const [incomeSource, setIncomeSource] = useState([]);
   const {showAlert} = useContext(AlertContext);
   const {toggleLoader} = useContext(LoaderContext);
-
+  const { currency, currTitle } = useCurrency();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [addFormData, setAddFormData] = useState({
       "name": "",
@@ -36,7 +36,7 @@ function IncomeLayout() {
     });
   const addFields = [
     { name: 'name', label: 'Name', type: 'text', required: true, placeHolder: "Name (ex: Regular Job/ Freelancing)" },
-    { name: 'amount', label: 'Amount', type: 'number', required: true, placeHolder: "Amout" },
+    { name: 'amount', label: 'Amount', type: 'number', required: true, placeHolder: "Amount" },
     { name: 'type', label: 'Type', type: 'select', required: true, placeHolder: "Type",
       options: [
         { label: 'Fixed', value: 'fixed' },
@@ -66,7 +66,7 @@ function IncomeLayout() {
   ];
 
   const totalMonthlyIncome = incomeSource.reduce((acc, curr) => {
-    return acc + convertCurrency(curr.amount, curr.currency, 'INR');
+    return acc + convertCurrency(curr.amount, curr.currency, currTitle);
   }, 0);
   const totalYearlyIncome = totalMonthlyIncome * 12;
 
@@ -140,13 +140,13 @@ function IncomeLayout() {
     {
       title: "Total Monthly Income",
       icon: BsCalendarMonth,
-      count: totalMonthlyIncome + ' $',
-      bgColor: "bg-blue-100",
+      count: <span className='flex'>{parseFloat(totalMonthlyIncome).toFixed(4)} {currency}</span>,
+      bgColor: "bg-blue-100", 
     },
     {
       title: "Total Yearly Income",
       icon: MdCalendarMonth,
-      count: totalYearlyIncome + ' ₹',
+      count: <span className='flex'>{parseFloat(totalYearlyIncome).toFixed(4)} {currency}</span>,
       bgColor: "bg-yellow-100",
     },
   ];

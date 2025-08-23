@@ -110,8 +110,8 @@ function IncomeList({data, fetchData}) {
         setTimeout(()=>toggleLoader(false), 500);
       };
     
-    const handleView = async (id) =>{
-      navigate(`/income/${id}/history`);
+    const handleView = async (item) =>{
+      navigate(`/income/${item._id}/history`, {state: {parentCurrency:item.currency}});
     }
 
     return (
@@ -132,12 +132,12 @@ function IncomeList({data, fetchData}) {
                         {data.map(item=>{
                             return <tr className={`border-b ${!item.isActive && "bg-red-300 dark:bg-red-700"}`} key={item._id}>
                             <td className="py-2">{item.name}</td>
-                            <td className="py-2">{item.amount}</td>
+                            <td className="py-2">{item.amount} {item.currency}</td>
                             <td className="py-2">{item.frequency}</td>
                             <td className="py-2">{new Date(item.startDate).toLocaleDateString()}</td>
                             <td className="py-2">{item.endDate?new Date(item.endDate).toLocaleDateString(): "-"}</td>
                             <td className="py-2">
-                                <button onClick={()=>{handleView(item._id)}} title="view" className="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600">
+                                <button onClick={()=>{handleView(item)}} title="view" className="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600">
                                     <FaEye/>
                                 </button>
                                 <button onClick={()=>{handleEdit(item)}} title="edit" className="ml-1 px-3 py-1 text-sm bg-orange-400 text-white rounded hover:bg-orange-500">

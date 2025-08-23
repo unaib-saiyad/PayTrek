@@ -9,20 +9,24 @@ import { CiMenuKebab } from "react-icons/ci";
 import { MdAdd } from "react-icons/md";
 import { IoIosArrowBack } from "react-icons/io";
 
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { LoaderContext } from '../../../context/shared/LoaderContext';
-
+import { useCurrency } from '../../../context/shared/CurrencyContext';
 import { AlertContext } from '../../../context/shared/AlertContext';
 import Grid from '../../Shared/Grid';
 import ModalForms from '../../Shared/ModalForms';
 import AlertModal from '../../Shared/AlertModal';
+import { convertCurrency } from '../../../utils/convertCurrency';
 
 function Expense() {
     const backendURL = process.env.REACT_APP_BACKEND_URL;
     const navigate = useNavigate();
+    const location = useLocation();
     const { __id } = useParams();
+    const { parentCurrency } = location.state;
     const {toggleLoader} = useContext(LoaderContext);
+    const { currency, currTitle } = useCurrency();
     const [expenseList, setExpenseList] = useState([]);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const {showAlert} = useContext(AlertContext);
@@ -61,7 +65,7 @@ function Expense() {
     }, []);
      
     const expenseLen = expenseList.length;
-    const totalExpense = expenseList.reduce((x, y)=>x+=(y.actualAmount+y.adjustment),0); 
+    const totalExpense = expenseList.reduce((x, y)=>x+=convertCurrency(y.actualAmount+y.adjustment, parentCurrency, currTitle),0); 
     const cardsData = [
           {
             title: "Total",
@@ -72,21 +76,21 @@ function Expense() {
           {
             title: "Average Monthly Expense",
             icon: BsCalendarMonth, 
-            count:  (totalExpense/expenseLen) || 0,
+            count:  <span className='flex'>{parseFloat(totalExpense/expenseLen).toFixed(4) || 0} {currency}</span>,
             bgColor: "bg-blue-100",
           },
           {
             title: "Total Yearly Expense",
             icon: MdCalendarMonth,
-            count: totalExpense || 0,
+            count: <span className='flex'>{parseFloat(totalExpense).toFixed(4) || 0} {currency}</span>,
             bgColor: "bg-yellow-100",
           },
     ];
 
     const gridColumns = [
-        {field:'month', type:"text"},
-         {field:'actualAmount', type:"number"}, 
-         {field:'adjustment', type:"number"}, 
+        {field:'month', type:"time"},
+         {field:'actualAmount', type:"number", suffix: parentCurrency}, 
+         {field:'adjustment', type:"number", suffix: parentCurrency}, 
          {field:'reason', type:"text"}, 
     ];
 
