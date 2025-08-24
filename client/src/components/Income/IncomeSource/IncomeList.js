@@ -67,8 +67,8 @@ function IncomeList({data, fetchData}) {
             "auth-token": localStorage.getItem("token"),
             },
         });
-        if(res.status){
-            showAlert("Income source deleted successfully!", "success");
+        if(res.data.status){
+            showAlert(res.data.message, "success");
             fetchData();
         }
     

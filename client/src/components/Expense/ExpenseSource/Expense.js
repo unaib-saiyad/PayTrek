@@ -255,7 +255,7 @@ function Expense() {
           },
         })
         if(response.data.status){
-          showAlert("History deleted successfully!...", 'success');
+          showAlert(response.data.message, 'success');
           fetchExpenses();
         }
         else{
