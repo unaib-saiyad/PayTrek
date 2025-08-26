@@ -22,7 +22,7 @@ function ModalForms({ title, isOpen, fields, onSubmit, formData, setFormData, on
         value = '';
       }
     }
-
+    else if(field.type==='number') value = value || 0;
     const commonProps = {
       name: field.name,
       value,
