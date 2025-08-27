@@ -8,18 +8,18 @@ const dayjs = require("dayjs");
  *   [ { date: "2025-03-01", amount: 60000 }, ... ]
  * @returns {Array} processed histories month-wise
  */
-const IncomeHistoryPreprocessor = (incomeSource, manualHistories)=> {
+const IncomeHistoryPreprocessor = (incomeSource, manualHistories, sDate, eDate)=> {
     if(!incomeSource) return [];
 
     manualHistoryMap = new Map();
     const format = 'YYYY-MM';
-    let current = dayjs(incomeSource.startDate);
-    const end = dayjs();
+    let current = dayjs(sDate);
+    const end = dayjs(eDate);
     let processedData = [];
 
     manualHistories.map(x => manualHistoryMap.set(dayjs(x.month).format(format), x));
 
-    while (current.isBefore(end) || current.isSame(end, "month")) {
+    while ((current.isBefore(end) || current.isSame(end, "month")) && (current.isBefore(dayjs()) || current.isSame(dayjs(), "month"))) {
         if(manualHistoryMap.has(current.format(format))){
             processedData.push(manualHistoryMap.get(current.format(format)));
         }

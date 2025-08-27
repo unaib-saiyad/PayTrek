@@ -24,7 +24,7 @@ import Grid from '../../Shared/Grid';
 function IncomeHisLayout() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { parentCurrency } = location.state || 'INR';
+  const { parentCurrency, startYear } = location.state || 'INR';
   const { __id } = useParams();
   const backendURL = process.env.REACT_APP_BACKEND_URL;
   const [incomeHistories, setIncomeHistories] = useState([]);
@@ -44,7 +44,8 @@ function IncomeHisLayout() {
     inHandAmount: 0,
     reason: ""
   });
-  
+  const [year, setYear] = useState(new Date().getFullYear());
+
   const fields = [
     { name: 'month', label: 'Month', type: 'date', required: true,  placeHolder: "Month", },
     { name: 'adjustment', label: 'Adjustment', type: 'number', required: true,  placeHolder: "Adjustment", },
@@ -56,7 +57,7 @@ function IncomeHisLayout() {
       debugger;
       toggleLoader(true);
       try{
-      const res = await axios.get(`${backendURL}/incomeManagement/getIncomeHistory/${__id}`, {
+      const res = await axios.get(`${backendURL}/incomeManagement/getIncomeHistory/${__id}?year=${year}`, {
           headers: {
               "auth-token": localStorage.getItem("token"),
           },
@@ -72,7 +73,7 @@ function IncomeHisLayout() {
 
   useEffect(() => {
       fetchHistory();
-    }, [__id]);
+    }, [__id, year]);
     
   const totalMonthlyIncome = incomeHistories.reduce((acc, curr) => {
     return acc + convertCurrency(curr.inHandAmount, parentCurrency, currTitle);
@@ -205,6 +206,11 @@ function IncomeHisLayout() {
     navigate(-1);
   }
 
+  const yearOptions = [];
+  for (let y = new Date().getFullYear(); y >= startYear; y--) {
+    yearOptions.push(<option key={y} value={y}>{y}</option>);
+  }
+
   return (
     <>
       <div className="flex flex-col gap-5" style={{ width: "100%" }}>
@@ -221,11 +227,13 @@ function IncomeHisLayout() {
               </span>
               <h1 className='dark:text-gray-100'>List of incomes histories</h1>
               <div className='flex dark:text-gray-100'>
+                <select name="year" value={year} onChange={(e)=>{setYear(e.target.value)}} className="border border-gray-300 col-span-4 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 mr-2 p-2 rounded-lg w-40">
+                  {yearOptions}                  
+                </select>
                 <MdAdd className='cursor-pointer hover:text-gray-500 dark:hover:text-black' onClick={handleAdd} title='add' />
                 <CiMenuKebab className='cursor-pointer hover:text-gray-500 dark:hover:text-black' title='options' />
               </div>
             </div>
-            {/* <IncomeList data={incomeHistories} fetchData={[]} /> */}
             <Grid columns={[{field:'month', type:"time"}, {field:'adjustment', type:"number", suffix: parentCurrency}, {field:'inHandAmount', type:"number", suffix: parentCurrency}, {field: 'updatedAt', type:"time"}]} data={incomeHistories} onDelete={handleDelete} onEdit={handleEdit} />
           </div>
         </div>

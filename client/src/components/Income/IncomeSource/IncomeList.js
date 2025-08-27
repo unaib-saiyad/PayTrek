@@ -111,7 +111,7 @@ function IncomeList({data, fetchData}) {
       };
     
     const handleView = async (item) =>{
-      navigate(`/income/${item._id}/history`, {state: {parentCurrency:item.currency}});
+      navigate(`/income/${item._id}/history`, {state: {parentCurrency:item.currency, startYear: new Date(item.startDate).getFullYear()}});
     }
 
     return (

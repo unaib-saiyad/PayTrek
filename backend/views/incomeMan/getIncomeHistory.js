@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 
 const getIncomeHistory = async (req, res) => {
   const { incomeId } = req.params;
+  const { year } = req.query;
 
   if (!mongoose.Types.ObjectId.isValid(incomeId)) {
     return res.status(400).json({ status: false, message: "Invalid income source ID" });
@@ -20,9 +21,14 @@ const getIncomeHistory = async (req, res) => {
       return res.status(403).json({ status: false, message: "Access denied" });
     }
 
-    const history = await IncomeHistory.find({ incomeSource: incomeId }).sort({ createdAt: -1 });
+    const start = new Date(`${year}-01-01`);
+    const end = new Date(`${year}-12-31`);
 
-    const preprocessedData = IncomeHistoryPreprocessor(income, history);
+    const history = await IncomeHistory.find({
+       incomeSource: incomeId, month: { $gte: start, $lte: end } 
+      }).sort({ month: -1 });
+
+    const preprocessedData = IncomeHistoryPreprocessor(income, history, start, end);
 
     return res.status(200).json({ status: true, data: preprocessedData });
   } catch (err) {
