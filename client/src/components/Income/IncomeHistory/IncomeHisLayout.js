@@ -198,6 +198,9 @@ function IncomeHisLayout() {
   
     } catch (e) {
       showAlert("Something went wrong while adding income!", "error");
+      if(!e.response.data.status){
+        showAlert(e.response.data.message, "error");
+      }
     }
     setTimeout(()=>toggleLoader(false), 500);
   };

@@ -15,6 +15,7 @@ const IncomeHistoryPreprocessor = (incomeSource, manualHistories, sDate, eDate)=
     const format = 'YYYY-MM';
     let current = dayjs(sDate);
     const end = dayjs(eDate);
+    
     let processedData = [];
 
     manualHistories.map(x => manualHistoryMap.set(dayjs(x.month).format(format), x));

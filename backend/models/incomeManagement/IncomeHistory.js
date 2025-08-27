@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 const IncomeHistorySchema = new Schema({
   incomeSource: { type: Schema.Types.ObjectId, ref: 'IncomeSource', required: true },
-  month: { type: String, required: true },         // Format: 'YYYY-MM'
+  month: { type: Schema.Types.Date, required: true },         // Format: 'YYYY-MM'
   adjustment: { type: Number, default: 0 },        // + or -
   reason: { type: String },
   inHandAmount: { type: Number },                  // Final income received
