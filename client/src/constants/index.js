@@ -14,6 +14,7 @@ import {
 } from "react-icons/fa";
 import { FaFileInvoiceDollar } from "react-icons/fa6";
 import { GiPayMoney } from "react-icons/gi";
+import { FaMoneyBill1Wave } from "react-icons/fa6";
 
 import user01 from "../assets/user01.png";
 import user02 from "../assets/user02.png";
@@ -44,6 +45,11 @@ export const links = [
     //   color: "bg-blue-100 text-blue-800",
     //   darkColor: "dark:bg-blue-900 dark:text-blue-300",
     // },
+  },
+  {
+    href: "/Reports",
+    icon: FaMoneyBill1Wave,
+    text: "Expense History"
   },
   {
     href: "/Reports",

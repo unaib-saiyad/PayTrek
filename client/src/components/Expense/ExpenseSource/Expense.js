@@ -66,7 +66,7 @@ function Expense() {
         fetchExpenses();
     }, []);
     const expenseLen = expenseList.length;
-    const totalExpense = expenseList.reduce((x, y)=>x+= convertCurrency(y.amount, y.currency, currTitle),0);
+    const totalExpenses = expenseList.reduce((x, y)=>[x[0]+= convertCurrency(y.amount, y.currency, currTitle), y.type=="fixed"?x[1]+= convertCurrency(y.amount, y.currency, currTitle):x[1]],[0, 0]);
     const cardsData = [ 
           {
             title: "Total",
@@ -75,15 +75,15 @@ function Expense() {
             bgColor: "bg-gray-100",
           },
           {
-            title: "Average Monthly Expense",
+            title: "Variable Monthly Expense",
             icon: BsCalendarMonth,
-            count:  <span className='flex'>{parseFloat(totalExpense/expenseLen).toFixed(4) || 0} {currency}</span>,
+            count:  <span className='flex'>{parseFloat(totalExpenses[0]).toFixed(4) || 0} {currency}</span>,
             bgColor: "bg-blue-100",
           },
           {
-            title: "Total Yearly Expense",
+            title: "Fixed Monthly Expense",
             icon: MdCalendarMonth,
-            count: <span className='flex'>{parseFloat(totalExpense).toFixed(4) || 0} {currency}</span>,
+            count: <span className='flex'>{parseFloat(totalExpenses[1]).toFixed(4) || 0} {currency}</span>,
             bgColor: "bg-yellow-100",
           },
     ];
@@ -290,7 +290,7 @@ function Expense() {
                   <CiMenuKebab className='cursor-pointer hover:text-gray-500 dark:hover:text-black' title='options' />
                 </div>
               </div>
-              <Grid columns={gridColumns} data={expenseList} onDelete={handleDelete} onEdit={handleEdit} onView={handleView} />
+              <Grid columns={gridColumns} data={expenseList} onDelete={handleDelete} onEdit={handleEdit} />
             </div>
           </div>
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-5'>
