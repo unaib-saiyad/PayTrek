@@ -47,7 +47,7 @@ export const links = [
     // },
   },
   {
-    href: "/Reports",
+    href: "/ExpenseHistory",
     icon: FaMoneyBill1Wave,
     text: "Expense History"
   },

@@ -24,7 +24,7 @@ function Expense() {
     const navigate = useNavigate();
     const location = useLocation();
     const { __id } = useParams();
-    const { parentCurrency } = location.state;
+    const { parentCurrency } = '';
     const {toggleLoader} = useContext(LoaderContext);
     const { currency, currTitle } = useCurrency();
     const [expenseList, setExpenseList] = useState([]);

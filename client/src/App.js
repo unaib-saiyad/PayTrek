@@ -95,6 +95,15 @@ function App() {
                 <ExpenseHistory/>
             </Main>
           </>} />
+          <Route exact path="/ExpenseHistory" element={<>
+            <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} toggleSidebar={toggleSidebar} />
+            <Sidebar isSidebarOpen={isSidebarOpen} currActive='/ExpenseHistory' />
+            <Main isSidebarOpen={isSidebarOpen}>
+              <Content>
+              <ExpenseHistory/>
+              </Content>
+            </Main>
+          </>} />
           <Route exact path="/Reports" element={<>
             <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} toggleSidebar={toggleSidebar} />
             <Sidebar isSidebarOpen={isSidebarOpen} currActive='/Reports' />
