@@ -1,4 +1,4 @@
-const mongoose = required('mongoose');
+const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const MonthlyExpenseSchema = new Schema({
@@ -15,6 +15,11 @@ const MonthlyExpenseSchema = new Schema({
       default: 0
     },
   
+    currency: { 
+      type: String, 
+      default: 'INR' 
+    },
+
     items: [
       {
         expenseSource: {

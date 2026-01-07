@@ -12,13 +12,15 @@ const createExpenseHistory = require('../../views/expenseMan/expenseHistory/crea
 const getExpenseHistory = require('../../views/expenseMan/expenseHistory/get');
 const updateExpenseHistory = require('../../views/expenseMan/expenseHistory/update');
 const deleteExpenseHistory = require('../../views/expenseMan/expenseHistory/delete');
-
+const createMonthlyExpense = require('../../views/expenseMan/monthlyExpense/create');
 // Validators
 const {
   validateExpenseSource,
   validateExpenseSourceUpdate,
   validateExpenseHistory,
-  validateExpenseHistoryUpdate
+  validateExpenseHistoryUpdate,
+  validateMonthlyExpense,
+  validateMonthlyExpenseUpdate
 } = require('../../validators/ExpenseManagement/expenseValidator');
 
 // Expense Source Routes
@@ -32,5 +34,7 @@ router.post('/createExpenseHistory', auth, validateExpenseHistory, validateReque
 router.get('/getExpenseHistory/:expenseSource', auth, getExpenseHistory);
 router.put('/updateExpenseHistory/:id', auth, validateExpenseHistoryUpdate, validateRequest, updateExpenseHistory);
 router.delete('/deleteExpenseHistory/:id', auth, deleteExpenseHistory);
+
+router.post('/createMonthlyExpense', auth, validateMonthlyExpense, validateRequest, createMonthlyExpense);
 
 module.exports = router;

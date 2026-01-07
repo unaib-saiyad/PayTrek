@@ -43,3 +43,84 @@ exports.validateExpenseHistoryUpdate = [
   body('reason').optional().isString(),
   body('notes').optional().isString()
 ];
+
+exports.validateMonthlyExpense = [
+  body('month')
+    .notEmpty()
+    .withMessage('Month is required')
+    .matches(/^\d{4}-(0[1-9]|1[0-2])$/)
+    .withMessage('Month must be in YYYY-MM format'),
+
+  body('items')
+    .optional()
+    .isArray()
+    .withMessage('Items must be an array'),
+
+  body('items.*.name')
+    .if(body('items').exists())
+    .notEmpty()
+    .withMessage('Item name is required'),
+
+  body('items.*.category')
+    .if(body('items').exists())
+    .notEmpty()
+    .withMessage('Category is required'),
+
+  body('items.*.actualAmount')
+    .if(body('items').exists())
+    .isFloat({ gt: 0 })
+    .withMessage('Actual amount must be greater than 0'),
+
+  body('items.*.type')
+    .optional()
+    .isIn(['fixed', 'variable'])
+];
+
+
+exports.validateMonthlyExpenseUpdate = [
+  body('month')
+    .not()
+    .exists()
+    .withMessage('Month cannot be updated'),
+
+  body('totalAmount')
+    .not()
+    .exists()
+    .withMessage('Total amount is auto-calculated'),
+
+  body('user')
+    .not()
+    .exists()
+    .withMessage('User cannot be changed'),
+
+  body('items')
+    .optional()
+    .isArray()
+    .withMessage('Items must be an array'),
+
+  body('items.*.name')
+    .optional()
+    .isString()
+    .notEmpty()
+    .withMessage('Item name must be a non-empty string'),
+
+  body('items.*.category')
+    .optional()
+    .isString()
+    .notEmpty()
+    .withMessage('Category must be a non-empty string'),
+
+  body('items.*.actualAmount')
+    .optional()
+    .isFloat({ gt: 0 })
+    .withMessage('Actual amount must be greater than 0'),
+
+  body('items.*.type')
+    .optional()
+    .isIn(['fixed', 'variable'])
+    .withMessage('Type must be fixed or variable'),
+
+  body('items.*.notes')
+    .optional()
+    .isString()
+];
