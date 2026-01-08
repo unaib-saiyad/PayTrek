@@ -7,7 +7,7 @@ const createMonthlyExpense = async (req, res)=>{
         if (!items.length) {
             return res.status(400).json({
               status: false,
-              message: 'At least one expense item is required'
+              message: 'At least one expense item is required!...'
             });
           }
         const newExpense = new MonthlyExpense({
@@ -29,7 +29,7 @@ const createMonthlyExpense = async (req, res)=>{
         if (err.code === 11000) {
             return res.status(409).json({
               status: false,
-              message: 'Monthly expense for this month already exists'
+              message: 'Monthly expense for this month already exists!...'
             });
         }
         return res.status(500).json({ 
