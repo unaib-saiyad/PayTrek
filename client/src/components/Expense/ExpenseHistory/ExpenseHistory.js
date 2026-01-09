@@ -7,9 +7,7 @@ import BarChart from '../../Stats/BarChart';
 import LineChart from '../../ChartsAndGraphs/LineChart';
 import { CiMenuKebab } from "react-icons/ci";
 import { MdAdd } from "react-icons/md";
-import { IoIosArrowBack } from "react-icons/io";
 
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { LoaderContext } from '../../../context/shared/LoaderContext';
 import { useCurrency } from '../../../context/shared/CurrencyContext';
@@ -21,22 +19,15 @@ import { convertCurrency } from '../../../utils/convertCurrency';
 
 function Expense() {
     const backendURL = process.env.REACT_APP_BACKEND_URL;
-    const navigate = useNavigate();
-    const location = useLocation();
-    const { __id } = useParams();
-    const { parentCurrency } = '';
     const {toggleLoader} = useContext(LoaderContext);
     const { currency, currTitle } = useCurrency();
     const [expenseList, setExpenseList] = useState([]);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const {showAlert} = useContext(AlertContext);
     const [addFormData, setAddFormData] = useState({
-      "expenseSource": __id,
-      "month": new Date(),
-      "actualAmount": 0,
-      "adjustment": 0,
-      "reason": "",
-      "notes": "",
+      "month": new Date().getFullYear() + "-" + new Date().getMonth()+1,
+      "currency": currTitle,
+      "items": [],
     });
     const [deleteModal, setDeleteModal] = useState(false);
     const [editModal, setEditModal] = useState(false);
@@ -46,18 +37,18 @@ function Expense() {
     const fetchExpensesHist = async () => {
         toggleLoader(true);
         try{
-        const res = await axios.get(`${backendURL}/expenseManagement/getExpenseHistory/${__id}`, {
+          const res = await axios.get(`${backendURL}/expenseManagement/getAllMonthlyExpenses/`, {
             headers: {
                 "auth-token": localStorage.getItem("token"),
             },
             });
             setExpenseList(res.data.data);
-        }
-        catch(e){
-            console.log(e)
-            showAlert('Something went wrong!...', 'error');
-        }
-        setTimeout(()=>{toggleLoader(false);}, 500);
+          }
+          catch(e){
+              console.log(e)
+              showAlert('Something went wrong!...', 'error');
+          }
+          setTimeout(()=>{toggleLoader(false);}, 500);
     };
   
     useEffect(() => {
@@ -65,7 +56,7 @@ function Expense() {
     }, []);
      
     const expenseLen = expenseList.length;
-    const totalExpense = expenseList.reduce((x, y)=>x+=convertCurrency(y.actualAmount+y.adjustment, parentCurrency, currTitle),0); 
+    const totalExpense = expenseList.reduce((x, y)=>x+=convertCurrency(y.totalAmount, y.currency, currTitle),0); 
     const cardsData = [
           {
             title: "Total",
@@ -76,7 +67,7 @@ function Expense() {
           {
             title: "Average Monthly Expense",
             icon: BsCalendarMonth, 
-            count:  <span className='flex'>{parseFloat(totalExpense/expenseLen).toFixed(4) || 0} {currency}</span>,
+            count:  <span className='flex'>{parseFloat(totalExpense/expenseLen).toFixed(2) || 0} {currency}</span>,
             bgColor: "bg-blue-100",
           },
           {
@@ -88,19 +79,22 @@ function Expense() {
     ];
 
     const gridColumns = [
-        {field:'month', type:"time"},
-         {field:'actualAmount', type:"number", suffix: parentCurrency}, 
-         {field:'adjustment', type:"number", suffix: parentCurrency}, 
-         {field:'reason', type:"text"}, 
+        {field:'month', type:"string"},
+         {field:'totalAmount', type:"number"}, 
+         {field:'currency', type:"string"}, 
     ];
 
     const fields = [
-      { name: 'month', label: 'Month', type: 'date', required: true,  placeHolder: "Month", },
-      { name: 'actualAmount', label: 'Actual Amount', type: 'number', required: true,  placeHolder: "Actual Amount", },
-      { name: 'adjustment', label: 'Adjustment', type: 'number', required: true,  placeHolder: "Adjustment", },
-      { name: 'reason', label: 'reason', type: 'text', required: true,  placeHolder: "Reason of Expense", },
-      { name: 'notes', label: 'notes', type: 'textarea', required: true,  placeHolder: "notes", },
-
+      { name: 'month', label: 'Month', type: 'string', required: true,  placeHolder: "Month in strict YYYY-MM", },
+      { name: 'currency', label: 'Currency', type: 'select', required: true, placeHolder: "Currency",
+        options: [
+          { label: 'INR', value: 'INR' },
+          { label: 'USD', value: 'USD' },
+          { label: 'EUR', value: 'EUR' },
+          { label: 'AED', value: 'AED' },
+        ], 
+      },
+      { name: 'items', label: 'Items', type: 'list', required: true,  placeHolder: "Items", },
     ];
 
 
@@ -121,12 +115,9 @@ function Expense() {
           showAlert("Expense History added successfully!", "success");
           await fetchExpensesHist();    
           setAddFormData({
-            "expenseSource": __id,
-            "month": new Date(),
-            "actualAmount": 0,
-            "adjustment": 0,
-            "reason": "",
-            "notes": "",
+            "month": new Date().getFullYear() + "-" + new Date().getMonth()+1,
+            "currency": currTitle,
+            "items": [],
           });
           setIsAddModalOpen(false);
         }
@@ -180,7 +171,6 @@ function Expense() {
     }
 
     const handleDeleteOk = async ()=>{
-      debugger;
       toggleLoader(true);
       try{
         const response = await axios.delete(`${backendURL}/expenseManagement/deleteExpenseHistory/${currId}`,{
@@ -205,6 +195,10 @@ function Expense() {
       setTimeout(()=>toggleLoader(false), 500);
     }
 
+    const handleView = async ()=>{
+
+    }
+
     return (
       <>
         <div className="flex flex-col gap-5" style={{ width: "100%" }}>
@@ -216,16 +210,13 @@ function Expense() {
           <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-5 h-[70vh]'>
             <div className='bg-white rounded-lg dark:bg-gray-700 border border-gray-300 col-span-3'>
               <div className='p-4 text-black font-bold text-lg flex justify-between'>
-              <span className='cursor-pointer' title='Back'>
-                <IoIosArrowBack onClick={()=>navigate(-1)} className='hover:bg-gray-200 rounded' />
-              </span>
                 <h1 className='dark:text-gray-100'>List of expense histories</h1>
                 <div className='flex dark:text-gray-100'>
                   <MdAdd className='cursor-pointer hover:text-gray-500 dark:hover:text-black' onClick={handleAdd} title='add' />
                   <CiMenuKebab className='cursor-pointer hover:text-gray-500 dark:hover:text-black' title='options' />
                 </div>
               </div>
-              <Grid columns={gridColumns} data={expenseList} onDelete={handleDelete} onEdit={handleEdit} />
+              <Grid columns={gridColumns} data={expenseList} onDelete={handleDelete} onEdit={handleEdit} onView={handleView} />
             </div>
           </div>
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-5'>
