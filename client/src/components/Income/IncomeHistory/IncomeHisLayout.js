@@ -26,7 +26,7 @@ function IncomeHisLayout() {
   const location = useLocation();
   const { parentCurrency, startYear } = location.state || 'INR';
   const { __id } = useParams();
-  const backendURL = process.env.REACT_APP_BACKEND_URL;
+  const backendURL = import.meta.env.VITE_BACKEND_URL;
   const [incomeHistories, setIncomeHistories] = useState([]);
   const [isEditModal, setIsEditModal] = useState(false);
   const {showAlert} = useContext(AlertContext);

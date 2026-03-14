@@ -18,7 +18,8 @@ import AlertModal from '../../Shared/AlertModal';
 import { convertCurrency } from '../../../utils/convertCurrency';
 
 function Expense() {
-    const backendURL = process.env.REACT_APP_BACKEND_URL;
+    // const backendURL = process.env.REACT_APP_BACKEND_URL;
+    const backendURL = import.meta.env.VITE_BACKEND_URL;
     const {toggleLoader} = useContext(LoaderContext);
     const { currency, currTitle } = useCurrency();
     const [expenseList, setExpenseList] = useState([]);

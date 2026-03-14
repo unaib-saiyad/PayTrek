@@ -10,7 +10,7 @@ import { useUser } from '../../context/shared/UserContext';
 import {AlertContext} from "../../context/shared/AlertContext";
 
 function UserData({ isOpen, toggleUserModal }) {
-    const backendURL = process.env.REACT_APP_BACKEND_URL;
+    const backendURL = import.meta.env.VITE_BACKEND_URL;
     const { showAlert } = useContext(AlertContext);
     const {user, loading, triggerAuthUpdate, refetchUser } = useUser();
     const [userData, setUserData] = useState(null);

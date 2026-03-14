@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 function Signup() {
-    const backendURL = process.env.REACT_APP_BACKEND_URL;
+    const backendURL = import.meta.env.VITE_BACKEND_URL;
     let nevigate = useNavigate();
     const { showAlert } = useContext(AlertContext);
     const [processing, setProcessing] = useState(false);

@@ -17,7 +17,7 @@ import {useUser} from "../../context/shared/UserContext";
 function Login() {
     const {triggerAuthUpdate} = useUser();
     let nevigate = useNavigate();
-    const backendURL = process.env.REACT_APP_BACKEND_URL;
+    const backendURL = import.meta.env.VITE_BACKEND_URL;
     const { showAlert } = useContext(AlertContext);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");

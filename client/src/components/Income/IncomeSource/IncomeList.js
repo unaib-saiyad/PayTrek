@@ -10,7 +10,7 @@ import { MdModeEdit } from "react-icons/md";
 
 function IncomeList({data, fetchData}) {
     const navigate = useNavigate();
-    const backendURL = process.env.REACT_APP_BACKEND_URL;
+    const backendURL = import.meta.env.VITE_BACKEND_URL;
     const {showAlert} = useContext(AlertContext);
     const {toggleLoader} = useContext(LoaderContext);
 
