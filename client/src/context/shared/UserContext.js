@@ -18,7 +18,7 @@ export const UserProvider = ({ children }) => {
 
   const fetchUser = async () => {
     try {
-      const res = await axios.get(`${backendURL}/fetchUser`, {
+      const res = await axios.get(`${backendURL}/api/fetchUser`, {
         headers: {
           "auth-token": token,
         },
@@ -36,7 +36,7 @@ export const UserProvider = ({ children }) => {
 
   const refetchUser = async () => {
     try {
-      const res = await axios.get(`${backendURL}/fetchUser`, {
+      const res = await axios.get(`${backendURL}/api/fetchUser`, {
         headers: {
           "auth-token": localStorage.getItem("token"),
         },
