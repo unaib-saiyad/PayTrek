@@ -63,7 +63,7 @@ function UserData({ isOpen, toggleUserModal }) {
             profileImage: updatedProfileImage
             };
         
-            const res = await axios.put(`${backendURL}/updateUser`, updatedUser, {
+            const res = await axios.put(`${backendURL}/api/updateUser`, updatedUser, {
             headers: {
                 "auth-token": localStorage.getItem("token"),
             },
@@ -89,7 +89,7 @@ function UserData({ isOpen, toggleUserModal }) {
         }
         
         try {
-            const res = await axios.delete(`${backendURL}/deleteUser`, {
+            const res = await axios.delete(`${backendURL}/api/deleteUser`, {
             headers: {
                 "auth-token": localStorage.getItem("token"),
             },

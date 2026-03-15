@@ -5,7 +5,8 @@ require("dotenv").config();
 connectToMongo();
 const app = express()
 const corsOptions = {
-    origin: process.env.FRONTEND_URL // frontend URI (ReactJS)
+    origin: process.env.FRONTEND_URL, // frontend URI (ReactJS)
+    credentials: true
 }
 const port = process.env.PORT || 4000;
 

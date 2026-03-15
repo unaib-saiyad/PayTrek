@@ -49,7 +49,7 @@ function Expense() {
     const fetchExpenses = async () => {
         toggleLoader(true);
         try{
-        const res = await axios.get(`${backendURL}/expenseManagement/getExpenseSources`, {
+        const res = await axios.get(`${backendURL}/api/expenseManagement/getExpenseSources`, {
             headers: {
                 "auth-token": localStorage.getItem("token"),
             },
@@ -174,7 +174,7 @@ function Expense() {
       toggleLoader(true);
   
       try {
-        const res = await axios.post(`${backendURL}/expenseManagement/createExpenseSource`, addFormData, {
+        const res = await axios.post(`${backendURL}/api/expenseManagement/createExpenseSource`, addFormData, {
           headers: {
             "auth-token": localStorage.getItem("token"),
           },
@@ -219,7 +219,7 @@ function Expense() {
       toggleLoader(true);
     
       try {
-        const res = await axios.put(`${backendURL}/expenseManagement/updateExpenseSource/${currId}`, editModalData, {
+        const res = await axios.put(`${backendURL}/api/expenseManagement/updateExpenseSource/${currId}`, editModalData, {
           headers: {
             "auth-token": localStorage.getItem("token"),
           },
@@ -250,7 +250,7 @@ function Expense() {
       debugger;
       toggleLoader(true);
       try{
-        const response = await axios.delete(`${backendURL}/expenseManagement/deleteExpenseSource/${currId}`,{
+        const response = await axios.delete(`${backendURL}/api/expenseManagement/deleteExpenseSource/${currId}`,{
           headers: {
             "auth-token": localStorage.getItem("token"),
           },

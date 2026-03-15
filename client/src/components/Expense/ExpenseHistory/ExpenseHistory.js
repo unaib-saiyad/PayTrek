@@ -38,7 +38,7 @@ function Expense() {
     const fetchExpensesHist = async () => {
         toggleLoader(true);
         try{
-          const res = await axios.get(`${backendURL}/expenseManagement/getAllMonthlyExpenses/`, {
+          const res = await axios.get(`${backendURL}/api/expenseManagement/getAllMonthlyExpenses/`, {
             headers: {
                 "auth-token": localStorage.getItem("token"),
             },

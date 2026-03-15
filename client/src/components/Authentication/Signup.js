@@ -58,7 +58,7 @@ function Signup() {
         }
         //setformData({...formData, profileImage: uploadedImageUrl});
 
-        const response = await fetch(`${backendURL}/createuser`, {
+        const response = await fetch(`${backendURL}/api/createuser`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

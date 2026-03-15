@@ -57,7 +57,7 @@ function IncomeHisLayout() {
       debugger;
       toggleLoader(true);
       try{
-      const res = await axios.get(`${backendURL}/incomeManagement/getIncomeHistory/${__id}?year=${year}`, {
+      const res = await axios.get(`${backendURL}/api/incomeManagement/getIncomeHistory/${__id}?year=${year}`, {
           headers: {
               "auth-token": localStorage.getItem("token"),
           },
@@ -122,7 +122,7 @@ function IncomeHisLayout() {
   const handleEditSubmit = async ()=>{
     toggleLoader(true);
     try{
-      const res = await axios.put(`${backendURL}/incomeManagement/updateIncomeHistory/${editFormData._id}`, editFormData, {
+      const res = await axios.put(`${backendURL}/api/incomeManagement/updateIncomeHistory/${editFormData._id}`, editFormData, {
         headers: {
           "auth-token": localStorage.getItem("token"),
         },
@@ -146,7 +146,7 @@ function IncomeHisLayout() {
   const handleOk = async ()=>{
     toggleLoader(true);
     try{
-      let res = await axios.delete(`${backendURL}/incomeManagement/deleteIncomeHistory/${delteId}`,{
+      let res = await axios.delete(`${backendURL}/api/incomeManagement/deleteIncomeHistory/${delteId}`,{
         headers: {
           "auth-token": localStorage.getItem("token"),
           },
@@ -175,7 +175,7 @@ function IncomeHisLayout() {
     toggleLoader(true);
   
     try {
-      const res = await axios.post(`${backendURL}/incomeManagement/createIncomeHistory`, addFormData, {
+      const res = await axios.post(`${backendURL}/api/incomeManagement/createIncomeHistory`, addFormData, {
         headers: {
           "auth-token": localStorage.getItem("token"),
         },

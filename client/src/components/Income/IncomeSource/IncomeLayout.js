@@ -73,7 +73,7 @@ function IncomeLayout() {
   const fetchIncomeSources = async ()=>{
     toggleLoader(true);
     try{
-      const res = await axios.get(`${backendURL}/incomeManagement/getIncomeSources`, {
+      const res = await axios.get(`${backendURL}/api/incomeManagement/getIncomeSources`, {
         headers: {
             "auth-token": localStorage.getItem("token"),
         },
@@ -100,7 +100,7 @@ function IncomeLayout() {
     toggleLoader(true);
   
     try {
-      const res = await axios.post(`${backendURL}/incomeManagement/createIncomeSource`, addFormData, {
+      const res = await axios.post(`${backendURL}/api/incomeManagement/createIncomeSource`, addFormData, {
         headers: {
           "auth-token": localStorage.getItem("token"),
         },

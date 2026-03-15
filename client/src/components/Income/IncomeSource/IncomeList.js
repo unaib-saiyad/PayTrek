@@ -62,7 +62,7 @@ function IncomeList({data, fetchData}) {
         toggleLoader(true);
   
         try {
-        const res = await axios.delete(`${backendURL}/incomeManagement/deleteIncomeSource/${currId}`, {
+        const res = await axios.delete(`${backendURL}/api/incomeManagement/deleteIncomeSource/${currId}`, {
             headers: {
             "auth-token": localStorage.getItem("token"),
             },
@@ -91,7 +91,7 @@ function IncomeList({data, fetchData}) {
         toggleLoader(true);
       
         try {
-          const res = await axios.put(`${backendURL}/incomeManagement/updateIncomeSource/${currId}`, editFormData, {
+          const res = await axios.put(`${backendURL}/api/incomeManagement/updateIncomeSource/${currId}`, editFormData, {
             headers: {
               "auth-token": localStorage.getItem("token"),
             },
