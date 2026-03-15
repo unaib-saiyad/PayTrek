@@ -1,6 +1,6 @@
 
 const HandleUploads = async ({file})=> {
-    const cloudUrl = import.meta.env.UPLOAD_IMAGE_CLOUD_URL;
+    const cloudUrl = process.env.REACT_APP_UPLOAD_IMAGE_CLOUD_URL;
     const formData = new FormData();
     formData.append("file", file);
     formData.append("upload_preset", "PayTrek"); // Set in Cloudinary

@@ -16,7 +16,7 @@ import { LoaderContext } from '../../../context/shared/LoaderContext';
 import ModalForms from '../../Shared/ModalForms';
 import { useCurrency } from '../../../context/shared/CurrencyContext';
 function IncomeLayout() {
-  const backendURL = import.meta.env.VITE_BACKEND_URL;
+  const backendURL = process.env.REACT_APP_BACKEND_URL;
   const [incomeSource, setIncomeSource] = useState([]);
   const {showAlert} = useContext(AlertContext);
   const {toggleLoader} = useContext(LoaderContext);

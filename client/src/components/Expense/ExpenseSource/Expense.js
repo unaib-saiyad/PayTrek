@@ -20,8 +20,8 @@ import { convertCurrency } from '../../../utils/convertCurrency';
 import { useCurrency } from '../../../context/shared/CurrencyContext';
 
 function Expense() {
-    // const backendURL = process.env.REACT_APP_BACKEND_URL;
-    const backendURL = import.meta.env.VITE_BACKEND_URL;
+    const backendURL = process.env.REACT_APP_BACKEND_URL;
+    // const backendURL = import.meta.env.VITE_BACKEND_URL;
     const navigate = useNavigate();
     const {toggleLoader} = useContext(LoaderContext);
     const [expenseList, setExpenseList] = useState([]);
@@ -67,7 +67,7 @@ function Expense() {
         fetchExpenses();
     }, []);
     const expenseLen = expenseList.length;
-    const totalExpenses = expenseList.reduce((x, y)=>[x[0]+= convertCurrency(y.amount, y.currency, currTitle), y.type=="fixed"?x[1]+= convertCurrency(y.amount, y.currency, currTitle):x[1]],[0, 0]);
+    const totalExpenses = expenseList.reduce((x, y)=>[x[0]+= convertCurrency(y.amount, y.currency, currTitle), y.type==="fixed"?x[1]+= convertCurrency(y.amount, y.currency, currTitle):x[1]],[0, 0]);
     const cardsData = [ 
           {
             title: "Total",
